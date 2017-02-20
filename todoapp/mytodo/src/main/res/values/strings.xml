@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MyToolBar</string>
+    <string name="text">zhihu</string>
+    <string name="title_search">search</string>
+    <string name="title_item2">item2</string>
+    <string name="title_item1">item1</string>
+    <string name="title_notifications">title_notifications</string>
+    <string name="title_toolbar">Title</string>
+    <string name="subtitle_toolbar">sub title</string>
+    <string name="item_search">Searching</string>
+    <string name="item_notification">Notification</string>
+    <string name="nav_text">Nav Text</string>
+    <string name="drawer_title1">drawer_title1</string>
+    <string name="drawer_title2">drawer_title2</string>
+</resources>
