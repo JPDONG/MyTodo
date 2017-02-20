@@ -1,4 +1,4 @@
-package com.learn.mytodo;
+package com.learn.mytodo.util;
 
 import android.content.Context;
 import android.widget.Toast;

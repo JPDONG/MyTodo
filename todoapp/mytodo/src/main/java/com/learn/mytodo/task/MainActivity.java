@@ -1,5 +1,6 @@
-package com.learn.mytodo;
+package com.learn.mytodo.task;
 
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.Window;
+
+import com.learn.mytodo.R;
+import com.learn.mytodo.util.Utils;
 
 public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener {
     private Toolbar mToolbar;
@@ -23,10 +27,29 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
 
     private void initViews() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setToolbar();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        setToolbar();
+        if (mNavigationView != null) {
+            setupDrawerContent(mNavigationView);
+        }
+    }
 
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.item1:
+                        break;
+                    case R.id.item2:
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     private void setToolbar() {
@@ -44,16 +67,16 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         switch(item.getItemId()){
             case R.id.item_search:
                 Utils.showToast(this,getResources().getString(R.string.item_search));
-                break;
+                return true;
             case R.id.item_notification:
                 Utils.showToast(this,getResources().getString(R.string.item_notification));
-                break;
+                return true;
             case R.id.item1:
                 Utils.showToast(this,getResources().getString(R.string.title_item1));
-                break;
+                return true;
             case R.id.item2:
                 Utils.showToast(this,getResources().getString(R.string.title_item2));
-                break;
+                return true;
             default:
                 break;
         }

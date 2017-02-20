@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         >
-        <activity android:name="com.learn.mytodo.MainActivity"
+        <activity android:name="com.learn.mytodo.task.MainActivity"
             android:theme="@style/ColorTranslucentTheme"
             >
             <intent-filter>
