@@ -12,4 +12,6 @@
     <string name="nav_text">Nav Text</string>
     <string name="drawer_title1">drawer_title1</string>
     <string name="drawer_title2">drawer_title2</string>
+    <string name="all_task_title">All Tasks</string>
+    <string name="taskdetail_title">task detail title</string>
 </resources>
