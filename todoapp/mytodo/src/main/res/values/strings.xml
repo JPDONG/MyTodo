@@ -14,4 +14,9 @@
     <string name="drawer_title2">drawer_title2</string>
     <string name="all_task_title">All Tasks</string>
     <string name="taskdetail_title">task detail title</string>
+    <string name="add_task_dialog">Add Task</string>
+    <string name="add_title">title</string>
+    <string name="add_description">description</string>
+    <string name="ok">ok</string>
+    <string name="cancel">cancel</string>
 </resources>

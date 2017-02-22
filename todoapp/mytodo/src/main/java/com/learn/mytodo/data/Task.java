@@ -1,6 +1,9 @@
 package com.learn.mytodo.data;
 
-import java.util.Objects;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.google.common.base.Objects;
 import java.util.UUID;
 
 /**
@@ -8,9 +11,16 @@ import java.util.UUID;
  */
 
 public final class Task {
+
+    @NonNull
     private final String mId;
+
+    @Nullable
     private final String mTitle;
+
+    @Nullable
     private final String mDescription;
+
     private final boolean mCompleted;
 
     public Task(String mId, String mTitle, String mDescription, boolean mCompleted) {
