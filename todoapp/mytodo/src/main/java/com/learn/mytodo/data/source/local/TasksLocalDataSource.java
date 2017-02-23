@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.learn.mytodo.data.Task;
 
@@ -19,6 +20,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class TasksLocalDataSource {
 
     private TasksDBHelper mTasksDBHelper;
+    private static final String[] projection = {
+            TasksDBHelper.ID,
+            TasksDBHelper.TITLE,
+            TasksDBHelper.DESCRIPTION,
+            TasksDBHelper.COMPLETED
+    };
+    private String TAG = "TasksLocalDataSource";
 
     public interface LoadTasksCallback {
         void onTasksLoaded(List<Task> task);
@@ -31,14 +39,9 @@ public class TasksLocalDataSource {
     }
 
     public void getTask(LoadTasksCallback loadTasksCallback){
+        Log.d(TAG, "getTask: ");
         List<Task> taskList = new ArrayList<Task>();
         SQLiteDatabase database = mTasksDBHelper.getReadableDatabase();
-        String[] projection = {
-                TasksDBHelper.ID,
-                TasksDBHelper.TITLE,
-                TasksDBHelper.DESCRIPTION,
-                TasksDBHelper.COMPLETED
-        };
         Cursor cursor = database.query(TasksDBHelper.TABLE_NAME, projection, null, null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -57,15 +60,35 @@ public class TasksLocalDataSource {
     }
 
     public void saveTask(Task task){
+        Log.d(TAG, "saveTask: ");
         checkNotNull(task);
         SQLiteDatabase sqLiteDatabase = mTasksDBHelper.getWritableDatabase();
-
         ContentValues contentValues = new ContentValues();
         contentValues.put(TasksDBHelper.ID,task.getmId());
         contentValues.put(TasksDBHelper.TITLE,task.getmTitle());
         contentValues.put(TasksDBHelper.DESCRIPTION,task.getmDescription());
         contentValues.put(TasksDBHelper.COMPLETED,task.ismCompleted());
         sqLiteDatabase.insert(TasksDBHelper.TABLE_NAME, null, contentValues);
+        sqLiteDatabase.close();
+    }
+
+    public void completeTask (Task task){
+        Log.d(TAG, "completeTask: ");
+        checkNotNull(task);
+        SQLiteDatabase sqLiteDatabase = mTasksDBHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TasksDBHelper.COMPLETED,1);
+        sqLiteDatabase.update(TasksDBHelper.TABLE_NAME, contentValues, "id=?", new String[]{task.getmId()});
+        sqLiteDatabase.close();
+    }
+
+    public void activateTask (Task task) {
+        Log.d(TAG, "activateTask: ");
+        checkNotNull(task);
+        SQLiteDatabase sqLiteDatabase = mTasksDBHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TasksDBHelper.COMPLETED,0);
+        sqLiteDatabase.update(TasksDBHelper.TABLE_NAME, contentValues, "id=?", new String[]{task.getmId()});
         sqLiteDatabase.close();
     }
 }

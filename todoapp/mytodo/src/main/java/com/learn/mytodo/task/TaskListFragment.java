@@ -1,6 +1,7 @@
 package com.learn.mytodo.task;
 
 import android.content.DialogInterface;
+import android.graphics.Paint;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -38,11 +39,11 @@ public class TaskListFragment extends Fragment {
     private String TAG = "TaskListFragment";
 
 
-    public TaskListFragment(){
+    public TaskListFragment() {
 
     }
 
-    public static TaskListFragment getInstance(){
+    public static TaskListFragment getInstance() {
         return new TaskListFragment();
     }
 
@@ -57,9 +58,8 @@ public class TaskListFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.tasklist_fragment,container,false);
-        mDialogView = inflater.inflate(R.layout.addtask_dialog, null);
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.tasklist_fragment, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         setupRecyclerView();
         FloatingActionButton floatingActionButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_task);
@@ -67,6 +67,7 @@ public class TaskListFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                mDialogView = inflater.inflate(R.layout.addtask_dialog, container, false);
                 builder.setView(mDialogView);
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
@@ -107,20 +108,23 @@ public class TaskListFragment extends Fragment {
     }
 
     private void loadTask() {
+        final List<Task> taskList = new ArrayList<Task>();
         mTasksLocalDataSource.getTask(new TasksLocalDataSource.LoadTasksCallback() {
             @Override
             public void onTasksLoaded(List<Task> task) {
+
                 for (Task t : task) {
-                    mTaskList.add(t);
+                    Log.d(TAG, "onTasksLoaded: mTaskList not contains : " + mTaskList);
+                    taskList.add(t);
                 }
             }
 
             @Override
             public void onDataNotAvailabel() {
-
             }
         });
-        mTaskListAdapter.notifyDataSetChanged();
+        //mTaskListAdapter.notifyDataSetChanged();
+        mTaskListAdapter.replaceData(taskList);
     }
 
     private void addTask(Task task) {
@@ -129,47 +133,77 @@ public class TaskListFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,true));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, true));
         mRecyclerView.setAdapter(mTaskListAdapter);
     }
 
-    class TaskListAdapter extends RecyclerView.Adapter<ListItemViewHolder>{
+    class TaskListAdapter extends RecyclerView.Adapter<ListItemViewHolder> {
+
         private List<Task> mList;
 
-        public TaskListAdapter(){
+        public TaskListAdapter() {
 
         }
+
         public TaskListAdapter(List<Task> list) {
             mList = list;
         }
 
         @Override
         public ListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            ListItemViewHolder listItemViewHolder = new ListItemViewHolder(getActivity().getLayoutInflater().inflate(R.layout.tasklist_item,parent,false));
+            ListItemViewHolder listItemViewHolder = new ListItemViewHolder(getActivity().getLayoutInflater().inflate(R.layout.tasklist_item, parent, false));
             return listItemViewHolder;
         }
 
         @Override
-        public void onBindViewHolder(ListItemViewHolder holder, int position) {
-            holder.mTitle.setText(mList.get(position).getmTitle());
-            holder.mDescription.setText(mList.get(position).getmDescription());
+        public void onBindViewHolder(final ListItemViewHolder holder, int position) {
+            final Task task = mList.get(position);
+            holder.mTitle.setText(task.getmTitle());
+            if (task.ismCompleted()) {
+                //holder.mTitle.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            }
+            holder.mDescription.setText(task.getmDescription());
+            holder.mCheckBox.setChecked(task.ismCompleted());
+            holder.mCheckBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (task.ismCompleted()) {
+                        mTasksLocalDataSource.activateTask(task);
+                        //holder.mTitle.setPaintFlags(holder.mTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                    } else {
+                        mTasksLocalDataSource.completeTask(task);
+                        //holder.mTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                    }
+                    //loadTask();
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
             return mList.size();
         }
+
+        public void replaceData(List<Task> mTaskList) {
+            setList(mTaskList);
+            notifyDataSetChanged();
+        }
+
+        public void setList(List<Task> list) {
+            mList = list;
+        }
     }
 
-    class ListItemViewHolder extends RecyclerView.ViewHolder{
-        private CheckBox mCheckBox;
+    class ListItemViewHolder extends RecyclerView.ViewHolder {
         private TextView mTitle;
         private TextView mDescription;
+        private CheckBox mCheckBox;
 
         public ListItemViewHolder(View itemView) {
             super(itemView);
             mTitle = (TextView) itemView.findViewById(R.id.task_title);
             mDescription = (TextView) itemView.findViewById(R.id.task_description);
+            mCheckBox = (CheckBox) itemView.findViewById(R.id.task_checkbox);
         }
     }
 
