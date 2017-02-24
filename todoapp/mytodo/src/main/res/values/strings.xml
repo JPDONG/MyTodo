@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyToolBar</string>
+    <string name="app_name">MyTodo</string>
     <string name="text">zhihu</string>
     <string name="title_search">search</string>
     <string name="title_item2">item2</string>

@@ -50,14 +50,24 @@ public final class Task {
         return mCompleted;
     }
 
-    @Override
+    /*@Override
     public boolean equals(Object obj) {
         Task o = (Task) obj;
         return mId == o.mId && mTitle == o.mTitle && mDescription == o.mDescription && mCompleted == o.mCompleted;
+    }*/
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean result = false;
+        if (obj instanceof Task) {
+            Task o = (Task)obj;
+            result = this.getmId().equals(o.getmId());
+        }
+        return result;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(mId, mTitle, mDescription);
+        return Objects.hashCode(mId);
     }
 }

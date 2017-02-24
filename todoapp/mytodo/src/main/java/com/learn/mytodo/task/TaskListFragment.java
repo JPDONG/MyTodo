@@ -112,10 +112,12 @@ public class TaskListFragment extends Fragment {
         mTasksLocalDataSource.getTask(new TasksLocalDataSource.LoadTasksCallback() {
             @Override
             public void onTasksLoaded(List<Task> task) {
-
                 for (Task t : task) {
-                    Log.d(TAG, "onTasksLoaded: mTaskList not contains : " + mTaskList);
-                    taskList.add(t);
+                    //taskList.add(t);
+                    if (!mTaskList.contains(t)) {
+                        mTaskList.add(t);
+                        Log.d(TAG, "onTasksLoaded: t.getmId() = " + t.getmId() + ",mTaskList.get(0).getmId() = " + mTaskList.get(0).getmId());
+                    }
                 }
             }
 
@@ -123,8 +125,8 @@ public class TaskListFragment extends Fragment {
             public void onDataNotAvailabel() {
             }
         });
-        //mTaskListAdapter.notifyDataSetChanged();
-        mTaskListAdapter.replaceData(taskList);
+        mTaskListAdapter.notifyDataSetChanged();
+        //mTaskListAdapter.replaceData(taskList);
     }
 
     private void addTask(Task task) {
@@ -163,6 +165,11 @@ public class TaskListFragment extends Fragment {
                 //holder.mTitle.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             }
             holder.mDescription.setText(task.getmDescription());
+           /* if ("".equals(task.getmDescription())) {
+                holder.mDescription.setVisibility(View.GONE);
+            } else {
+                holder.mDescription.setText(task.getmDescription());
+            }*/
             holder.mCheckBox.setChecked(task.ismCompleted());
             holder.mCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
