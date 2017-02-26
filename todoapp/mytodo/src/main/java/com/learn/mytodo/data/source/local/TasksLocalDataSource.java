@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.learn.mytodo.data.Task;
+import com.learn.mytodo.data.source.TasksDataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by dongjiangpeng on 2017/2/22 0022.
  */
 
-public class TasksLocalDataSource {
+public class TasksLocalDataSource implements TasksDataSource{
 
     private TasksDBHelper mTasksDBHelper;
     private static final String[] projection = {
@@ -28,16 +29,12 @@ public class TasksLocalDataSource {
     };
     private String TAG = "TasksLocalDataSource";
 
-    public interface LoadTasksCallback {
-        void onTasksLoaded(List<Task> task);
-        void onDataNotAvailabel();
-    }
-
     public TasksLocalDataSource(Context context) {
         checkNotNull(context);
         mTasksDBHelper = new TasksDBHelper(context);
     }
 
+    @Override
     public void getTask(LoadTasksCallback loadTasksCallback){
         Log.d(TAG, "getTask: ");
         List<Task> taskList = new ArrayList<Task>();

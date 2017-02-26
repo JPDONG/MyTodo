@@ -21,7 +21,9 @@ import android.widget.TextView;
 
 import com.learn.mytodo.R;
 import com.learn.mytodo.data.Task;
+import com.learn.mytodo.data.source.TasksDataSource;
 import com.learn.mytodo.data.source.local.TasksLocalDataSource;
+import com.learn.mytodo.data.source.remote.TasksRemoteDataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,7 @@ public class TaskListFragment extends Fragment {
     private TaskListAdapter mTaskListAdapter;
     private List<Task> mTaskList;
     private TasksLocalDataSource mTasksLocalDataSource;
+    private TasksRemoteDataSource mTasksRemoteDataSource;
     private View mDialogView;
     private String TAG = "TaskListFragment";
 
@@ -53,6 +56,7 @@ public class TaskListFragment extends Fragment {
         mTaskList = new ArrayList(0);
         mTaskListAdapter = new TaskListAdapter(mTaskList);
         mTasksLocalDataSource = new TasksLocalDataSource(getContext());
+        mTasksRemoteDataSource = new TasksRemoteDataSource(getContext());
         loadTask();
     }
 
@@ -123,6 +127,17 @@ public class TaskListFragment extends Fragment {
 
             @Override
             public void onDataNotAvailabel() {
+            }
+        });
+        mTasksRemoteDataSource.getTask(new TasksRemoteDataSource.LoadTasksCallback() {
+            @Override
+            public void onTasksLoaded(List<Task> task) {
+
+            }
+
+            @Override
+            public void onDataNotAvailabel() {
+
             }
         });
         mTaskListAdapter.notifyDataSetChanged();
