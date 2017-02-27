@@ -16,4 +16,11 @@
         <!--在Android 4.4之前的版本上运行，直接跟随系统主题-->
     </style>
 
+    <style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    </style>
+
+    <style name="FloatingActionButton" parent="Widget.Design.FloatingActionButton">
+        <item name="android:layout_margin">10dp</item>
+    </style>
+
 </resources>
