@@ -140,6 +140,7 @@ public class TaskListFragment extends Fragment {
 
             }
         });
+        mTasksRemoteDataSource.saveTask(new Task("save", "test"));
         mTaskListAdapter.notifyDataSetChanged();
         //mTaskListAdapter.replaceData(taskList);
     }
