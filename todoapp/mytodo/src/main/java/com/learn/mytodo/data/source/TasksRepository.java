@@ -90,6 +90,10 @@ public class TasksRepository implements TasksDataSource{
         });
     }
 
+    public void refreshTasks() {
+        mCacheIsDirty = true;
+    }
+
     private void refreshLocalDataSource(List<Task> task) {
 
     }

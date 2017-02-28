@@ -16,7 +16,9 @@ import com.learn.mytodo.data.source.TasksDataSource;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,14 +34,23 @@ public class TasksRemoteDataSource implements TasksDataSource{
     }
 
     @Override
-    public void getTask(TasksRemoteDataSource.LoadTasksCallback loadTasksCallback) {
+    public void getTask(final TasksRemoteDataSource.LoadTasksCallback loadTasksCallback) {
         Log.d(TAG, "getTask: ");
         //String url = "http://t.tt";
-        String url = "http://172.10.1.102:8080/todoservlet/MySQLConnection";
+        //String url = "http://172.10.1.102:8080/todoservlet/MySQLConnection";
+        String url = "http://10.0.2.2:8080/todoservlet/MySQLConnection";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "onResponse: " + response.toString());
+                List<Task> taskList = new ArrayList<>();
+                String result = response.toString();
+                String[] tasks = result.split(";");
+                for (String string : tasks) {
+                    String[] taskItems = string.split(",");
+                    taskList.add(new Task(taskItems[0], taskItems[1], taskItems[2], "1".equals(taskItems[3])));
+                }
+                loadTasksCallback.onTasksLoaded(taskList);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -54,7 +65,8 @@ public class TasksRemoteDataSource implements TasksDataSource{
     public void saveTask(final Task task) {
         Log.d(TAG, "saveTask: ");
         //String url = "http://t.tt";
-        String url = "http://172.10.1.102:8080/todoservlet/MySQLConnection";
+        //String url = "http://172.10.1.102:8080/todoservlet/MySQLConnection";
+        String url = "http://10.0.2.2:8080/todoservlet/MySQLConnection";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -74,6 +86,7 @@ public class TasksRemoteDataSource implements TasksDataSource{
                 taskMap.put("title", task.getmTitle());
                 taskMap.put("description", task.getmDescription());
                 taskMap.put("completed", task.ismCompleted()?"1":"0");
+                taskMap.put("operation", "save");
                 return taskMap;
             }
         };
@@ -81,12 +94,62 @@ public class TasksRemoteDataSource implements TasksDataSource{
     }
 
     @Override
-    public void activateTask(Task task) {
+    public void activateTask(final Task task) {
+        //String url = "http://172.10.1.102:8080/todoservlet/MySQLConnection";
+        String url = "http://10.0.2.2:8080/todoservlet/MySQLConnection";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "onResponse: " + response.toString());
 
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: " + error.getMessage());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> taskMap = new HashMap<>();
+                taskMap.put("id", task.getmId());
+                taskMap.put("title", task.getmTitle());
+                taskMap.put("description", task.getmDescription());
+                taskMap.put("completed", task.ismCompleted()?"1":"0");
+                taskMap.put("operation", "activate");
+                return taskMap;
+            }
+        };
+        mRequestQueue.add(stringRequest);
     }
 
     @Override
-    public void completeTask(Task task) {
+    public void completeTask(final Task task) {
+        //String url = "http://172.10.1.102:8080/todoservlet/MySQLConnection";
+        String url = "http://10.0.2.2:8080/todoservlet/MySQLConnection";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "onResponse: " + response.toString());
 
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: " + error.getMessage());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> taskMap = new HashMap<>();
+                taskMap.put("id", task.getmId());
+                taskMap.put("title", task.getmTitle());
+                taskMap.put("description", task.getmDescription());
+                taskMap.put("completed", task.ismCompleted()?"1":"0");
+                taskMap.put("operation", "complete");
+                return taskMap;
+            }
+        };
+        mRequestQueue.add(stringRequest);
     }
 }

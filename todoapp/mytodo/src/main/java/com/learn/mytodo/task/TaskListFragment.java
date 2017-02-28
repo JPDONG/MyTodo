@@ -45,6 +45,7 @@ public class TaskListFragment extends Fragment {
     private View mDialogView;
     private CoordinatorLayout mCoordinatorLayout;
     private String TAG = "TaskListFragment";
+    private boolean mTestRemoteData = true;
 
 
     public TaskListFragment() {
@@ -63,6 +64,10 @@ public class TaskListFragment extends Fragment {
         mTasksLocalDataSource = new TasksLocalDataSource(getContext());
         mTasksRemoteDataSource = new TasksRemoteDataSource(getContext());
         mTasksRepository = TasksRepository.getInstance(mTasksLocalDataSource, mTasksRemoteDataSource);
+        if (mTestRemoteData) {
+            mTasksRepository.refreshTasks();
+            mTestRemoteData = false;
+        }
         loadTask();
     }
 
