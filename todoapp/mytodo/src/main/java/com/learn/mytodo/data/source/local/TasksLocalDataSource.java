@@ -35,7 +35,7 @@ public class TasksLocalDataSource implements TasksDataSource{
     }
 
     @Override
-    public void getTask(LoadTasksCallback loadTasksCallback){
+    public void getTask(TasksLocalDataSource.LoadTasksCallback loadTasksCallback){
         Log.d(TAG, "getTask: ");
         List<Task> taskList = new ArrayList<Task>();
         SQLiteDatabase database = mTasksDBHelper.getReadableDatabase();

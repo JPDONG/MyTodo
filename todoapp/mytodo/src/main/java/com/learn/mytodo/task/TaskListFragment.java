@@ -2,7 +2,9 @@ package com.learn.mytodo.task;
 
 import android.content.DialogInterface;
 import android.graphics.Paint;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 import com.learn.mytodo.R;
 import com.learn.mytodo.data.Task;
 import com.learn.mytodo.data.source.TasksDataSource;
+import com.learn.mytodo.data.source.TasksRepository;
 import com.learn.mytodo.data.source.local.TasksLocalDataSource;
 import com.learn.mytodo.data.source.remote.TasksRemoteDataSource;
 
@@ -38,7 +41,9 @@ public class TaskListFragment extends Fragment {
     private List<Task> mTaskList;
     private TasksLocalDataSource mTasksLocalDataSource;
     private TasksRemoteDataSource mTasksRemoteDataSource;
+    private TasksRepository mTasksRepository;
     private View mDialogView;
+    private CoordinatorLayout mCoordinatorLayout;
     private String TAG = "TaskListFragment";
 
 
@@ -57,6 +62,7 @@ public class TaskListFragment extends Fragment {
         mTaskListAdapter = new TaskListAdapter(mTaskList);
         mTasksLocalDataSource = new TasksLocalDataSource(getContext());
         mTasksRemoteDataSource = new TasksRemoteDataSource(getContext());
+        mTasksRepository = TasksRepository.getInstance(mTasksLocalDataSource, mTasksRemoteDataSource);
         loadTask();
     }
 
@@ -65,6 +71,7 @@ public class TaskListFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tasklist_fragment, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mCoordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinator);
         setupRecyclerView();
         FloatingActionButton floatingActionButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_task);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +90,7 @@ public class TaskListFragment extends Fragment {
                         Log.d(TAG, "onClick: title = " + title + ", description = " + description);
                         Task task = new Task(title, description);
                         addTask(task);
+                        showSnackerBar("add sucess");
                         loadTask();
                         if (mTaskListAdapter.getItemCount() - 1 >= 0) {
                             mRecyclerView.smoothScrollToPosition(mTaskListAdapter.getItemCount() - 1);
@@ -111,17 +119,21 @@ public class TaskListFragment extends Fragment {
         return view;
     }
 
+    private void showSnackerBar(String s) {
+        Snackbar.make(getView(),s,Snackbar.LENGTH_LONG).show();
+    }
+
     private void loadTask() {
         final List<Task> taskList = new ArrayList<Task>();
-        mTasksLocalDataSource.getTask(new TasksLocalDataSource.LoadTasksCallback() {
+        mTasksRepository.getTask(new TasksRepository.LoadTasksCallback() {
             @Override
             public void onTasksLoaded(List<Task> task) {
                 for (Task t : task) {
-                    //taskList.add(t);
-                    if (!mTaskList.contains(t)) {
+                    taskList.add(t);
+                    /*if (!mTaskList.contains(t)) {
                         mTaskList.add(t);
                         Log.d(TAG, "onTasksLoaded: t.getmId() = " + t.getmId() + ",mTaskList.get(0).getmId() = " + mTaskList.get(0).getmId());
-                    }
+                    }*/
                 }
             }
 
@@ -129,25 +141,13 @@ public class TaskListFragment extends Fragment {
             public void onDataNotAvailabel() {
             }
         });
-        mTasksRemoteDataSource.getTask(new TasksRemoteDataSource.LoadTasksCallback() {
-            @Override
-            public void onTasksLoaded(List<Task> task) {
-
-            }
-
-            @Override
-            public void onDataNotAvailabel() {
-
-            }
-        });
-        mTasksRemoteDataSource.saveTask(new Task("save", "test"));
-        mTaskListAdapter.notifyDataSetChanged();
-        //mTaskListAdapter.replaceData(taskList);
+        //mTaskListAdapter.notifyDataSetChanged();
+        mTaskListAdapter.replaceData(taskList);
     }
 
     private void addTask(Task task) {
         //mTaskList.add("new task");
-        mTasksLocalDataSource.saveTask(task);
+        mTasksRepository.saveTask(task);
     }
 
     private void setupRecyclerView() {
@@ -170,6 +170,17 @@ public class TaskListFragment extends Fragment {
         @Override
         public ListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             ListItemViewHolder listItemViewHolder = new ListItemViewHolder(getActivity().getLayoutInflater().inflate(R.layout.tasklist_item, parent, false));
+
+           /*if (task.ismCompleted()) {
+                holder.mTitle.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            }*/
+
+           /* if ("".equals(task.getmDescription())) {
+                holder.mDescription.setVisibility(View.GONE);
+            } else {
+                holder.mDescription.setText(task.getmDescription());
+            }*/
+
             return listItemViewHolder;
         }
 
@@ -178,7 +189,7 @@ public class TaskListFragment extends Fragment {
             final Task task = mList.get(position);
             holder.mTitle.setText(task.getmTitle());
             if (task.ismCompleted()) {
-                //holder.mTitle.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                holder.mTitle.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             }
             holder.mDescription.setText(task.getmDescription());
            /* if ("".equals(task.getmDescription())) {
@@ -191,13 +202,17 @@ public class TaskListFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (task.ismCompleted()) {
-                        mTasksLocalDataSource.activateTask(task);
-                        //holder.mTitle.setPaintFlags(holder.mTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                        //Log.d(TAG, "onClick: activateTask :" + task);
+                        mTasksRepository.activateTask(task);
+                        showSnackerBar("activate task");
+                        holder.mTitle.setPaintFlags(holder.mTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                     } else {
-                        mTasksLocalDataSource.completeTask(task);
-                        //holder.mTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                        //Log.d(TAG, "onClick: completeTask :" + task);
+                        mTasksRepository.completeTask(task);
+                        showSnackerBar("complete task");
+                        holder.mTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
                     }
-                    //loadTask();
+                    loadTask();
                 }
             });
         }

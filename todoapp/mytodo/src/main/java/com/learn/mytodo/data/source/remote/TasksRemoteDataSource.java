@@ -32,7 +32,7 @@ public class TasksRemoteDataSource implements TasksDataSource{
     }
 
     @Override
-    public void getTask(LoadTasksCallback loadTasksCallback) {
+    public void getTask(TasksRemoteDataSource.LoadTasksCallback loadTasksCallback) {
         Log.d(TAG, "getTask: ");
         //String url = "http://t.tt";
         String url = "http://172.10.1.102:8080/todoservlet/MySQLConnection";

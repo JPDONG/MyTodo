@@ -70,4 +70,9 @@ public final class Task {
     public int hashCode() {
         return Objects.hashCode(mId);
     }
+
+    @Override
+    public String toString() {
+        return "" + this.mId + this.getmTitle() + this.getmDescription() + this.ismCompleted();
+    }
 }

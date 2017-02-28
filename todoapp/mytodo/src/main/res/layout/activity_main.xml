@@ -26,8 +26,7 @@
                 android:layout_alignParentStart="true"
                 toolbar:navigationIcon="@mipmap/ic_drawer_home"
                 toolbar:popupTheme="@style/Base.Toolbar.Menu"
-                toolbar:subtitle="@string/subtitle_toolbar"
-                toolbar:title="@string/title_toolbar">
+               >
 
             </android.support.v7.widget.Toolbar>
 

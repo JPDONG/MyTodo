@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         if (mNavigationView != null) {
             setupDrawerContent(mNavigationView);
         }
+
         TaskListFragment taskListFragment = new TaskListFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
