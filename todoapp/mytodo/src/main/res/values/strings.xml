@@ -20,4 +20,7 @@
     <string name="ok">ok</string>
     <string name="cancel">cancel</string>
     <string name="addtask_title">Add Task</string>
+    <string name="open_string">open</string>
+    <string name="close_string">close</string>
+    <string name="title_sync">sync</string>
 </resources>

@@ -12,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +30,8 @@ import com.learn.mytodo.data.source.local.TasksLocalDataSource;
 import com.learn.mytodo.data.source.remote.TasksRemoteDataSource;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,14 +41,14 @@ import java.util.List;
 public class TaskListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private TaskListAdapter mTaskListAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<Task> mTaskList;
     private TasksLocalDataSource mTasksLocalDataSource;
     private TasksRemoteDataSource mTasksRemoteDataSource;
     private TasksRepository mTasksRepository;
     private View mDialogView;
-    private CoordinatorLayout mCoordinatorLayout;
     private String TAG = "TaskListFragment";
-    private boolean mTestRemoteData = true;
+    private boolean mTestRemoteData = false;
 
 
     public TaskListFragment() {
@@ -76,7 +79,7 @@ public class TaskListFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tasklist_fragment, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        mCoordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinator);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         setupRecyclerView();
         FloatingActionButton floatingActionButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_task);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +96,10 @@ public class TaskListFragment extends Fragment {
                         String title = editTitle.getText().toString();
                         String description = editDescription.getText().toString();
                         Log.d(TAG, "onClick: title = " + title + ", description = " + description);
+                        if ("".equals(title.trim())) {
+                            showSnackerBar("nothing to add");
+                            return;
+                        }
                         Task task = new Task(title, description);
                         addTask(task);
                         showSnackerBar("add sucess");
@@ -100,6 +107,7 @@ public class TaskListFragment extends Fragment {
                         if (mTaskListAdapter.getItemCount() - 1 >= 0) {
                             mRecyclerView.smoothScrollToPosition(mTaskListAdapter.getItemCount() - 1);
                         }
+
                     }
                 });
 
@@ -113,19 +121,18 @@ public class TaskListFragment extends Fragment {
                 dialog.show();
             }
         });
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 loadTask();
-                swipeRefreshLayout.setRefreshing(false);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
         return view;
     }
 
     private void showSnackerBar(String s) {
-        Snackbar.make(getView(),s,Snackbar.LENGTH_LONG).show();
+        Snackbar.make(getView(), s, Snackbar.LENGTH_LONG).show();
     }
 
     private void loadTask() {
@@ -158,6 +165,19 @@ public class TaskListFragment extends Fragment {
     private void setupRecyclerView() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, true));
         mRecyclerView.setAdapter(mTaskListAdapter);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                Log.d(TAG, "onScrolled: topRowVerticalPosition = " + topRowVerticalPosition);
+                mSwipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+        TaskItemTouchHelperCallback taskItemTouchHelperCallback = new TaskItemTouchHelperCallback(mTaskListAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(taskItemTouchHelperCallback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
     class TaskListAdapter extends RecyclerView.Adapter<ListItemViewHolder> {
@@ -232,6 +252,11 @@ public class TaskListFragment extends Fragment {
             notifyDataSetChanged();
         }
 
+        public void remove(int position) {
+            mList.remove(position);
+            notifyItemRemoved(position);
+        }
+
         public void setList(List<Task> list) {
             mList = list;
         }
@@ -247,6 +272,40 @@ public class TaskListFragment extends Fragment {
             mTitle = (TextView) itemView.findViewById(R.id.task_title);
             mDescription = (TextView) itemView.findViewById(R.id.task_description);
             mCheckBox = (CheckBox) itemView.findViewById(R.id.task_checkbox);
+        }
+    }
+
+    class TaskItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
+
+        private TaskListAdapter taskListAdapter;
+
+        public TaskItemTouchHelperCallback(TaskListAdapter adapter) {
+            super(ItemTouchHelper.UP|ItemTouchHelper.DOWN, ItemTouchHelper.LEFT);
+            this.taskListAdapter = adapter;
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            mSwipeRefreshLayout.setEnabled(false);
+            int oldPosition = viewHolder.getAdapterPosition();
+            int targetPosition = target.getAdapterPosition();
+            if (oldPosition < targetPosition) {
+                for (int i = oldPosition; i < targetPosition; i++) {
+                    Collections.swap(taskListAdapter.mList, i , i + 1);
+                }
+            } else {
+                for (int i = oldPosition; i > targetPosition; i--) {
+                    Collections.swap(taskListAdapter.mList, i, i - 1);
+                }
+            }
+            taskListAdapter.notifyItemMoved(oldPosition, targetPosition);
+            return true;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            int deletePosition = viewHolder.getAdapterPosition();
+            taskListAdapter.remove(deletePosition);
         }
     }
 

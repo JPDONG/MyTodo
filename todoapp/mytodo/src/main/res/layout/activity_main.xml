@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/color_zhihu_blue"
                 android:layout_alignParentStart="true"
-                toolbar:navigationIcon="@mipmap/ic_drawer_home"
+                toolbar:navigationIcon="@drawable/ic_menu"
                 toolbar:popupTheme="@style/Base.Toolbar.Menu"
                >
 
