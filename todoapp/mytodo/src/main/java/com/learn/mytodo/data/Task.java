@@ -1,5 +1,6 @@
 package com.learn.mytodo.data;
 
+import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -22,6 +23,26 @@ public final class Task {
     private final String mDescription;
 
     private final boolean mCompleted;
+
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getModifiedTime() {
+        return modifiedTime;
+    }
+
+    public void setModifiedTime(String modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    private String modifiedTime;
 
     public Task(String mId, String mTitle, String mDescription, boolean mCompleted) {
         this.mId = mId;
@@ -74,5 +95,13 @@ public final class Task {
     @Override
     public String toString() {
         return "" + this.mId + this.getmTitle() + this.getmDescription() + this.ismCompleted();
+    }
+
+    public static class Status implements BaseColumns {
+        public static final int STATUS_ADD = 1;
+        public static final int STATUS_DELETE = -1;
+        public static final int STATUS_MODIFIED = 2;
+        public static final int STATUS_SYNC = 9;
+
     }
 }

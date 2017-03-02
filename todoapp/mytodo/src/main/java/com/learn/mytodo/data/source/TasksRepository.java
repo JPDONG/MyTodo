@@ -1,5 +1,7 @@
 package com.learn.mytodo.data.source;
 
+import android.util.Log;
+
 import com.learn.mytodo.data.Task;
 import com.learn.mytodo.data.source.local.TasksLocalDataSource;
 import com.learn.mytodo.data.source.remote.TasksRemoteDataSource;
@@ -16,6 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 
 public class TasksRepository implements TasksDataSource{
+    private static  final String TAG = "TasksRepository";
     private static TasksRepository INSTANCE = null;
     private final TasksLocalDataSource mTasksLocalDataSource;
     private final TasksRemoteDataSource mTasksRemoteDataSource;
@@ -133,5 +136,17 @@ public class TasksRepository implements TasksDataSource{
             mCacheTasks = new LinkedHashMap<>();
         }
         mCacheTasks.put(task.getmId(),completeTask);
+    }
+
+    public void syncData() {
+        final String[] serverTime = new String[1];
+        serverTime[0] = null;
+        mTasksRemoteDataSource.getTime(new TasksRemoteDataSource.TimeCallback() {
+            @Override
+            public void loadTime(String s) {
+                serverTime[0] = s;
+            }
+        });
+        Log.d(TAG, "syncData: " + serverTime[0]);
     }
 }

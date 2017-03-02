@@ -152,4 +152,33 @@ public class TasksRemoteDataSource implements TasksDataSource{
         };
         mRequestQueue.add(stringRequest);
     }
+
+    public void getTime(final TimeCallback timeCallback) {
+        final String[] result = new String[1];
+        String url = "http://10.0.2.2:8080/todoservlet/MySQLConnection";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "onResponse: " + response.toString());
+                timeCallback.loadTime(response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: " + error.getMessage());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> taskMap = new HashMap<>();
+                taskMap.put("operation", "gettime");
+                return taskMap;
+            }
+        };
+        mRequestQueue.add(stringRequest);
+    }
+
+    public interface TimeCallback {
+        void loadTime(String s);
+    }
 }

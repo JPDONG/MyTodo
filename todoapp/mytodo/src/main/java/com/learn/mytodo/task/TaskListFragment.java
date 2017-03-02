@@ -136,6 +136,10 @@ public class TaskListFragment extends Fragment {
     }
 
     private void loadTask() {
+        /**
+         * test
+         */
+        mTasksRepository.syncData();
         final List<Task> taskList = new ArrayList<Task>();
         mTasksRepository.getTask(new TasksRepository.LoadTasksCallback() {
             @Override

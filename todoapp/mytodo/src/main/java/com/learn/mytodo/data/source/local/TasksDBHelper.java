@@ -33,11 +33,15 @@ public class TasksDBHelper extends SQLiteOpenHelper {
 
     public static final String COMPLETED = "completed";
 
+    public static final String STATUS = "status";
+
+    public static final String MODIFIED_TIME = "time";
+
     public static final String SQL_CREATE_TASKS = "CREATE TABLE " + TASKS_TABLE_NAME + "(" +
             ID + TEXT_TYPE + " PRIMARY KEY" +COMMA_SEP +
             TITLE + TEXT_TYPE +COMMA_SEP +
             DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-            COMPLETED + BOOLEAN_TYPE + ")";
+            COMPLETED + BOOLEAN_TYPE + ",status text,time int)";
 
     //public static final String SQL_CREATE_USERS = "CREATE TABLE " + USERS_TABLE_NAME + "(id text primary key,name text,password
     private String TAG = "TasksDBHelper";
