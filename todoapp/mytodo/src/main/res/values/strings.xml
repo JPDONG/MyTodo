@@ -23,4 +23,5 @@
     <string name="open_string">open</string>
     <string name="close_string">close</string>
     <string name="title_sync">sync</string>
+    <string name="item_sync">sync</string>
 </resources>

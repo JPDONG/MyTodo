@@ -12,6 +12,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.learn.mytodo.data.Task;
 import com.learn.mytodo.data.source.TasksDataSource;
+import com.learn.mytodo.data.source.local.TasksLocalDataSource;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,9 +29,11 @@ import java.util.Map;
 public class TasksRemoteDataSource implements TasksDataSource{
     private static final String TAG = "TasksRemoteDataSource";
     private RequestQueue mRequestQueue;
+    private TasksLocalDataSource mTasksLocalDataSource;
 
     public TasksRemoteDataSource(Context context) {
         mRequestQueue = Volley.newRequestQueue(context);
+        mTasksLocalDataSource = new TasksLocalDataSource(context);
     }
 
     @Override
@@ -71,7 +74,7 @@ public class TasksRemoteDataSource implements TasksDataSource{
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "onResponse: " + response.toString());
-
+                mTasksLocalDataSource.syncComplete(task);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -113,9 +116,9 @@ public class TasksRemoteDataSource implements TasksDataSource{
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> taskMap = new HashMap<>();
                 taskMap.put("id", task.getmId());
-                taskMap.put("title", task.getmTitle());
+                /*taskMap.put("title", task.getmTitle());
                 taskMap.put("description", task.getmDescription());
-                taskMap.put("completed", task.ismCompleted()?"1":"0");
+                taskMap.put("completed", task.ismCompleted()?"1":"0");*/
                 taskMap.put("operation", "activate");
                 return taskMap;
             }
@@ -143,9 +146,9 @@ public class TasksRemoteDataSource implements TasksDataSource{
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> taskMap = new HashMap<>();
                 taskMap.put("id", task.getmId());
-                taskMap.put("title", task.getmTitle());
+                /*taskMap.put("title", task.getmTitle());
                 taskMap.put("description", task.getmDescription());
-                taskMap.put("completed", task.ismCompleted()?"1":"0");
+                taskMap.put("completed", task.ismCompleted()?"1":"0");*/
                 taskMap.put("operation", "complete");
                 return taskMap;
             }
@@ -172,6 +175,34 @@ public class TasksRemoteDataSource implements TasksDataSource{
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> taskMap = new HashMap<>();
                 taskMap.put("operation", "gettime");
+                return taskMap;
+            }
+        };
+        mRequestQueue.add(stringRequest);
+    }
+
+    public void updateTask(final Task t) {
+        String url = "http://10.0.2.2:8080/todoservlet/MySQLConnection";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "onResponse: " + response.toString());
+                mTasksLocalDataSource.syncComplete(t);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: " + error.getMessage());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> taskMap = new HashMap<>();
+                taskMap.put("id", t.getmId());
+                taskMap.put("title", t.getmTitle());
+                taskMap.put("description", t.getmDescription());
+                taskMap.put("completed", t.ismCompleted()?"1":"0");
+                taskMap.put("operation", "update");
                 return taskMap;
             }
         };

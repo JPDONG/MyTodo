@@ -41,7 +41,7 @@ public class TasksDBHelper extends SQLiteOpenHelper {
             ID + TEXT_TYPE + " PRIMARY KEY" +COMMA_SEP +
             TITLE + TEXT_TYPE +COMMA_SEP +
             DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-            COMPLETED + BOOLEAN_TYPE + ",status text,time int)";
+            COMPLETED + BOOLEAN_TYPE + ",status text,time text)";
 
     //public static final String SQL_CREATE_USERS = "CREATE TABLE " + USERS_TABLE_NAME + "(id text primary key,name text,password
     private String TAG = "TasksDBHelper";

@@ -13,18 +13,27 @@ import android.view.MenuItem;
 import android.view.Window;
 
 import com.learn.mytodo.R;
+import com.learn.mytodo.data.source.TasksRepository;
+import com.learn.mytodo.data.source.local.TasksLocalDataSource;
+import com.learn.mytodo.data.source.remote.TasksRemoteDataSource;
 import com.learn.mytodo.util.Utils;
 
 public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener {
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
+    private TasksRepository mTasksRepository;
+    private TasksLocalDataSource tasksLocalDataSource;
+    private TasksRemoteDataSource tasksRemoteDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+        tasksLocalDataSource = new TasksLocalDataSource(this);
+        tasksRemoteDataSource = new TasksRemoteDataSource(this);
+        mTasksRepository = TasksRepository.getInstance(tasksLocalDataSource, tasksRemoteDataSource);
         initViews();
     }
 
@@ -79,8 +88,9 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
             case R.id.item_search:
                 Utils.showToast(this,getResources().getString(R.string.item_search));
                 return true;
-            case R.id.item_notification:
-                Utils.showToast(this,getResources().getString(R.string.item_notification));
+            case R.id.item_sync:
+                mTasksRepository.syncData();
+                Utils.showToast(this,getResources().getString(R.string.item_sync));
                 return true;
             case R.id.item1:
                 Utils.showToast(this,getResources().getString(R.string.title_item1));

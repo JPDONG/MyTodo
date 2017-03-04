@@ -105,7 +105,7 @@ public class TasksRepository implements TasksDataSource{
     public void saveTask(Task task) {
         checkNotNull(task);
         mTasksLocalDataSource.saveTask(task);
-        mTasksRemoteDataSource.saveTask(task);
+        //mTasksRemoteDataSource.saveTask(task);
         if (mCacheTasks == null) {
             mCacheTasks = new LinkedHashMap<>();
         }
@@ -117,7 +117,7 @@ public class TasksRepository implements TasksDataSource{
     public void activateTask(Task task) {
         checkNotNull(task);
         mTasksLocalDataSource.activateTask(task);
-        mTasksRemoteDataSource.activateTask(task);
+        //mTasksRemoteDataSource.activateTask(task);
         Task activateTask = new Task(task.getmId(), task.getmTitle(), task.getmDescription(), false);
         if (mCacheTasks == null) {
             mCacheTasks = new LinkedHashMap<>();
@@ -130,7 +130,7 @@ public class TasksRepository implements TasksDataSource{
     public void completeTask(Task task) {
         checkNotNull(task);
         mTasksLocalDataSource.completeTask(task);
-        mTasksRemoteDataSource.completeTask(task);
+        //mTasksRemoteDataSource.completeTask(task);
         Task completeTask = new Task(task.getmId(), task.getmTitle(), task.getmDescription(), true);
         if (mCacheTasks == null) {
             mCacheTasks = new LinkedHashMap<>();
@@ -139,14 +139,67 @@ public class TasksRepository implements TasksDataSource{
     }
 
     public void syncData() {
-        final String[] serverTime = new String[1];
+        /*final String[] serverTime = new String[1];
         serverTime[0] = null;
         mTasksRemoteDataSource.getTime(new TasksRemoteDataSource.TimeCallback() {
             @Override
             public void loadTime(String s) {
                 serverTime[0] = s;
+                Log.d(TAG, "loadTime: " + serverTime[0]);
+                mTasksLocalDataSource.getTime(new TasksLocalDataSource.TimeCallback(){
+
+                    @Override
+                    public void loadTime(String s) {
+                        Log.d(TAG, "ClientloadTime: " + s);
+                    }
+                });
+            }
+        });*/
+        mTasksLocalDataSource.getDateAdded(new TasksLocalDataSource.SyncCallback() {
+            @Override
+            public void loadTime(String s) {
+
+            }
+
+            @Override
+            public void getDataAddedSync(List<Task> taskList) {
+                for (Task t : taskList) {
+                    mTasksRemoteDataSource.saveTask(t);
+                }
+            }
+
+            @Override
+            public void getDataDeletedSync(List<Task> taskList) {
+
+            }
+
+            @Override
+            public void getDataModifiedSync(List<Task> taskList) {
+
             }
         });
-        Log.d(TAG, "syncData: " + serverTime[0]);
+        mTasksLocalDataSource.getDataModified(new TasksLocalDataSource.SyncCallback() {
+            @Override
+            public void loadTime(String s) {
+
+            }
+
+            @Override
+            public void getDataAddedSync(List<Task> taskList) {
+
+            }
+
+            @Override
+            public void getDataDeletedSync(List<Task> taskList) {
+
+            }
+
+            @Override
+            public void getDataModifiedSync(List<Task> taskList) {
+                for (Task t : taskList) {
+                    mTasksRemoteDataSource.updateTask(t);
+                }
+            }
+        });
     }
 }

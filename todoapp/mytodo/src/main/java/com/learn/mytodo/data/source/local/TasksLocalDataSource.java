@@ -96,4 +96,97 @@ public class TasksLocalDataSource implements TasksDataSource{
         sqLiteDatabase.update(TasksDBHelper.TASKS_TABLE_NAME, contentValues, "id=?", new String[]{task.getmId()});
         sqLiteDatabase.close();
     }
+
+    /*public void getTime(SyncCallback timeCallback) {
+        String time = null;
+        SQLiteDatabase database = mTasksDBHelper.getReadableDatabase();
+        Cursor cursor = database.query(TasksDBHelper.TASKS_TABLE_NAME, new String[]{"time"}, null, null, null, null, "time", "1");
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                time = cursor.getString(cursor.getColumnIndexOrThrow("time"));
+            }
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        database.close();
+        timeCallback.loadTime(time);
+    }*/
+
+    public void getDateAdded(SyncCallback syncCallback) {
+        List<Task> taskAdded = new ArrayList<Task>();
+        SQLiteDatabase database = mTasksDBHelper.getReadableDatabase();
+        Cursor cursor = database.query(TasksDBHelper.TASKS_TABLE_NAME, projection, "status like 1", null, null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                String taskId = cursor.getString(cursor.getColumnIndexOrThrow(projection[0]));
+                String taskTitle = cursor.getString(cursor.getColumnIndexOrThrow(projection[1]));
+                String taskDescription = cursor.getString(cursor.getColumnIndexOrThrow(projection[2]));
+                int taskCompleted = cursor.getInt(cursor.getColumnIndexOrThrow(projection[3]));
+                taskAdded.add(new Task(taskId, taskTitle, taskDescription, taskCompleted == 0 ? false : true));
+            }
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        database.close();
+        syncCallback.getDataAddedSync(taskAdded);
+    }
+
+    public void getDateDeleted(SyncCallback syncCallback) {
+        List<Task> taskDeleted = new ArrayList<Task>();
+        SQLiteDatabase database = mTasksDBHelper.getReadableDatabase();
+        Cursor cursor = database.query(TasksDBHelper.TASKS_TABLE_NAME, projection, "status like -1", null, null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                String taskId = cursor.getString(cursor.getColumnIndexOrThrow(projection[0]));
+                String taskTitle = cursor.getString(cursor.getColumnIndexOrThrow(projection[1]));
+                String taskDescription = cursor.getString(cursor.getColumnIndexOrThrow(projection[2]));
+                int taskCompleted = cursor.getInt(cursor.getColumnIndexOrThrow(projection[3]));
+                taskDeleted.add(new Task(taskId, taskTitle, taskDescription, taskCompleted == 0 ? false : true));
+            }
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        database.close();
+        syncCallback.getDataDeletedSync(taskDeleted);
+    }
+
+    public void getDataModified(SyncCallback syncCallback) {
+        List<Task> taskModified = new ArrayList<Task>();
+        SQLiteDatabase database = mTasksDBHelper.getReadableDatabase();
+        Cursor cursor = database.query(TasksDBHelper.TASKS_TABLE_NAME, projection, "status like 2", null, null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                String taskId = cursor.getString(cursor.getColumnIndexOrThrow(projection[0]));
+                String taskTitle = cursor.getString(cursor.getColumnIndexOrThrow(projection[1]));
+                String taskDescription = cursor.getString(cursor.getColumnIndexOrThrow(projection[2]));
+                int taskCompleted = cursor.getInt(cursor.getColumnIndexOrThrow(projection[3]));
+                taskModified.add(new Task(taskId, taskTitle, taskDescription, taskCompleted == 0 ? false : true));
+            }
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        database.close();
+        syncCallback.getDataModifiedSync(taskModified);
+    }
+
+    public void syncComplete(Task t) {
+        checkNotNull(t);
+        SQLiteDatabase sqLiteDatabase = mTasksDBHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TasksDBHelper.STATUS, Task.Status.STATUS_SYNC);
+        //contentValues.put(TasksDBHelper.MODIFIED_TIME, mTime);
+        sqLiteDatabase.update(TasksDBHelper.TASKS_TABLE_NAME, contentValues, "id=?", new String[]{t.getmId()});
+        sqLiteDatabase.close();
+    }
+
+    public interface SyncCallback {
+        void loadTime(String s);
+        void getDataAddedSync(List<Task> taskList);
+        void getDataDeletedSync(List<Task> taskList);
+        void getDataModifiedSync(List<Task> taskList);
+    }
 }
