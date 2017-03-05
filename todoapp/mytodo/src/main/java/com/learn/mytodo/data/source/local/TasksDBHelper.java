@@ -23,7 +23,7 @@ public class TasksDBHelper extends SQLiteOpenHelper {
 
     public static final String TASKS_TABLE_NAME = "tasks";
 
-    public static final String USERS_TABLE_NAME = "tasks";
+    public static final String USERS_TABLE_NAME = "users";
 
     public static final String ID = "id";
 

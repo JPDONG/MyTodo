@@ -139,7 +139,7 @@ public class TaskListFragment extends Fragment {
         /**
          * test
          */
-        mTasksRepository.syncData();
+        //mTasksRepository.syncData();
         final List<Task> taskList = new ArrayList<Task>();
         mTasksRepository.getTask(new TasksRepository.LoadTasksCallback() {
             @Override
