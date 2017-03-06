@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/item1"
-        android:title="@string/drawer_title1"
-        android:icon="@color/colorAccent">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/item1"
+            android:icon="@drawable/ic_edit"
+            android:title="@string/title_item1" />
+
+        <item
+            android:id="@+id/item2"
+            android:icon="@drawable/ic_edit"
+            android:title="@string/title_item2" />
+    </group>
+
+    <item android:title="comunicate">
+        <menu>
+            <item
+                android:id="@+id/item10"
+                android:icon="@color/colorAccent"
+                android:title="@string/drawer_title1"></item>
+            <item
+                android:id="@+id/item11"
+                android:icon="@color/colorPrimaryDark"
+                android:title="@string/drawer_title2"></item>
+        </menu>
     </item>
-    <item
-        android:id="@+id/item2"
-        android:title="@string/drawer_title2"
-        android:icon="@color/colorPrimaryDark">
-    </item>
+
 </menu>

@@ -38,7 +38,7 @@ import java.util.List;
  * Created by dongjiangpeng on 2017/2/21 0021.
  */
 
-public class TaskListFragment extends Fragment {
+public class TaskListFragment extends Fragment implements TasksContract.TasksView{
     private RecyclerView mRecyclerView;
     private TaskListAdapter mTaskListAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -182,6 +182,11 @@ public class TaskListFragment extends Fragment {
         TaskItemTouchHelperCallback taskItemTouchHelperCallback = new TaskItemTouchHelperCallback(mTaskListAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(taskItemTouchHelperCallback);
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
+    }
+
+    @Override
+    public void showTasks(List<Task> tasks) {
+        mTaskListAdapter.replaceData(tasks);
     }
 
     class TaskListAdapter extends RecyclerView.Adapter<ListItemViewHolder> {

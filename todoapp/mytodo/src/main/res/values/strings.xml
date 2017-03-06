@@ -24,4 +24,8 @@
     <string name="close_string">close</string>
     <string name="title_sync">sync</string>
     <string name="item_sync">sync</string>
+    <string name="user_name">user name</string>
+    <string name="user_email">user@email.com</string>
+    <string name="user_name_login">name:</string>
+    <string name="user_password_login">password:</string>
 </resources>
