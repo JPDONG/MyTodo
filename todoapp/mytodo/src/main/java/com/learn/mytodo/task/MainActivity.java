@@ -9,8 +9,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.transition.Scene;
+import android.transition.TransitionManager;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 
 import com.learn.mytodo.R;
 import com.learn.mytodo.data.source.TasksRepository;
@@ -18,13 +24,14 @@ import com.learn.mytodo.data.source.local.TasksLocalDataSource;
 import com.learn.mytodo.data.source.remote.TasksRemoteDataSource;
 import com.learn.mytodo.util.Utils;
 
-public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener {
+public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener, View.OnClickListener {
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private TasksRepository mTasksRepository;
     private TasksLocalDataSource tasksLocalDataSource;
     private TasksRemoteDataSource tasksRemoteDataSource;
+    private ImageView mUserIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         setToolbar();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = mNavigationView.getHeaderView(0);
+        mUserIcon = (ImageView) headerView.findViewById(R.id.user_icon);
+        mUserIcon.setOnClickListener(this);
         if (mNavigationView != null) {
             setupDrawerContent(mNavigationView);
         }
@@ -102,5 +112,17 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 break;
         }
         return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.user_icon:
+                ViewGroup sceneRoot = (ViewGroup) findViewById(R.id.activity_main);
+                Scene scene1 = Scene.getSceneForLayout(sceneRoot, R.layout.nav_header, this);
+                Scene scene2 = Scene.getSceneForLayout(sceneRoot, R.layout.user_infomation, this);
+                TransitionManager.go(scene2);
+                break;
+        }
     }
 }
