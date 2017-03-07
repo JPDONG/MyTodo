@@ -27,7 +27,7 @@ public class UserInformationFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.user_infomation, container, false);
+        View view = inflater.inflate(R.layout.user_infomation_frag, container, false);
         return view;
     }
 

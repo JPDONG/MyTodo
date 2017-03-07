@@ -125,8 +125,8 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         switch (v.getId()){
             case R.id.user_icon:
                 /*ViewGroup sceneRoot = (ViewGroup) findViewById(R.id.activity_main);
-                Scene scene1 = Scene.getSceneForLayout(sceneRoot, R.layout.nav_header, this);
-                Scene scene2 = Scene.getSceneForLayout(sceneRoot, R.layout.user_infomation, this);
+                Scene scene1 = Scene.getSceneForLayout(sceneRoot, R.layout.navigation_header, this);
+                Scene scene2 = Scene.getSceneForLayout(sceneRoot, R.layout.user_infomation_frag, this);
                 TransitionManager.go(scene2);*/
                 UserInformationFragment userInformationFragment = new UserInformationFragment();
                 Slide slideTransition = new Slide(Gravity.RIGHT);

@@ -24,7 +24,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
-        setContentView(R.layout.login_act);
+        setContentView(R.layout.login_fragment);
         initViews();
     }
 
