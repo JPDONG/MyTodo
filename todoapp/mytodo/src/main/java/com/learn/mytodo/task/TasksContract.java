@@ -11,9 +11,12 @@ import java.util.List;
 public interface TasksContract {
     interface TasksPresenter {
         void processTasks(List<Task> list);
+        void start();
+        void loadTasks(boolean forceUpdate);
     }
 
     interface TasksView {
         void showTasks(List<Task> tasks);
+        void setPresenter(TasksContract.TasksPresenter tasksPresenter);
     }
 }

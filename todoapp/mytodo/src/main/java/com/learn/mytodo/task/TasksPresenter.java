@@ -15,10 +15,11 @@ import java.util.List;
  * Created by dongjiangpeng on 2017/2/28 0028.
  */
 
-public class TasksPresenter {
+public class TasksPresenter implements TasksContract.TasksPresenter{
 
     private TasksRepository mTasksRepository;
     private boolean mFirstLoad;
+    private TasksContract.TasksView mTasksView;
 
 
     public TasksPresenter(Context context) {
@@ -38,11 +39,11 @@ public class TasksPresenter {
         mTasksRepository.getTask(new TasksDataSource.LoadTasksCallback() {
             @Override
             public void onTasksLoaded(List<Task> task) {
-                List<Task> taskList = new ArrayList<Task>();
+                List<Task> tasksShow = new ArrayList<Task>();
                 for (Task t : task) {
-                    taskList.add(t);
+                    tasksShow.add(t);
                 }
-                processTasks();
+                processTasks(tasksShow);
             }
 
             @Override
@@ -52,8 +53,18 @@ public class TasksPresenter {
         });
     }
 
-    private void processTasks() {
+    @Override
+    public void processTasks(List<Task> tasksShow) {
+        if (tasksShow.isEmpty()) {
 
+        } else {
+            mTasksView.showTasks(tasksShow);
+        }
+    }
+
+    @Override
+    public void start() {
+        loadTasks(false);
     }
 
     public void activateTask(Task task) {

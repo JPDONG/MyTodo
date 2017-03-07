@@ -49,6 +49,7 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
     private View mDialogView;
     private String TAG = "TaskListFragment";
     private boolean mTestRemoteData = false;
+    private TasksContract.TasksPresenter mTasksPresenter;
 
 
     public TaskListFragment() {
@@ -71,7 +72,8 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
             mTasksRepository.refreshTasks();
             mTestRemoteData = false;
         }
-        loadTask();
+        //loadTask();
+        //mTasksPresenter.start();
     }
 
     @Nullable
@@ -136,20 +138,16 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
     }
 
     private void loadTask() {
+        //mTasksPresenter.loadTasks(false);
         /**
-         * test
+         * test taskrepository
          */
-        //mTasksRepository.syncData();
         final List<Task> taskList = new ArrayList<Task>();
         mTasksRepository.getTask(new TasksRepository.LoadTasksCallback() {
             @Override
             public void onTasksLoaded(List<Task> task) {
                 for (Task t : task) {
                     taskList.add(t);
-                    /*if (!mTaskList.contains(t)) {
-                        mTaskList.add(t);
-                        Log.d(TAG, "onTasksLoaded: t.getmId() = " + t.getmId() + ",mTaskList.get(0).getmId() = " + mTaskList.get(0).getmId());
-                    }*/
                 }
             }
 
@@ -157,7 +155,6 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
             public void onDataNotAvailabel() {
             }
         });
-        //mTaskListAdapter.notifyDataSetChanged();
         mTaskListAdapter.replaceData(taskList);
     }
 
@@ -187,6 +184,11 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
     @Override
     public void showTasks(List<Task> tasks) {
         mTaskListAdapter.replaceData(tasks);
+    }
+
+    @Override
+    public void setPresenter(TasksContract.TasksPresenter tasksPresenter) {
+        mTasksPresenter = tasksPresenter;
     }
 
     class TaskListAdapter extends RecyclerView.Adapter<ListItemViewHolder> {

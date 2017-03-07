@@ -2,6 +2,7 @@ package com.learn.mytodo.task;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -9,8 +10,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.transition.ChangeBounds;
 import android.transition.Scene;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
 import android.transition.TransitionManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +27,7 @@ import com.learn.mytodo.R;
 import com.learn.mytodo.data.source.TasksRepository;
 import com.learn.mytodo.data.source.local.TasksLocalDataSource;
 import com.learn.mytodo.data.source.remote.TasksRemoteDataSource;
+import com.learn.mytodo.user.UserInformationFragment;
 import com.learn.mytodo.util.Utils;
 
 public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener, View.OnClickListener {
@@ -118,10 +124,26 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.user_icon:
-                ViewGroup sceneRoot = (ViewGroup) findViewById(R.id.activity_main);
+                /*ViewGroup sceneRoot = (ViewGroup) findViewById(R.id.activity_main);
                 Scene scene1 = Scene.getSceneForLayout(sceneRoot, R.layout.nav_header, this);
                 Scene scene2 = Scene.getSceneForLayout(sceneRoot, R.layout.user_infomation, this);
-                TransitionManager.go(scene2);
+                TransitionManager.go(scene2);*/
+                UserInformationFragment userInformationFragment = new UserInformationFragment();
+                Slide slideTransition = new Slide(Gravity.RIGHT);
+                slideTransition.setDuration(1000);
+                userInformationFragment.setEnterTransition(slideTransition);
+
+                // Defines enter transition only for shared element
+                //ChangeBounds changeBoundsTransition = TransitionInflater.from(this).inflateTransition(R.transition.change_bounds);
+                //ChangeBounds changeBoundsTransition = new ChangeBounds();
+                //userInformationFragment.setSharedElementEnterTransition(changeBoundsTransition);
+                userInformationFragment.setSharedElementEnterTransition(new Slide());
+
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_frame, userInformationFragment)
+                        .addSharedElement(mUserIcon, "transition")
+                        .commit();
+                mDrawerLayout.closeDrawers();
                 break;
         }
     }
