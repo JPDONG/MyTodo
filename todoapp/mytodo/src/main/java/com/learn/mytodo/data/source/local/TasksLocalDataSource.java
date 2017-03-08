@@ -58,6 +58,7 @@ public class TasksLocalDataSource implements TasksDataSource{
         loadTasksCallback.onTasksLoaded(taskList);
     }
 
+    @Override
     public void saveTask(Task task){
         Log.d(TAG, "saveTask: ");
         checkNotNull(task);
@@ -73,6 +74,7 @@ public class TasksLocalDataSource implements TasksDataSource{
         sqLiteDatabase.close();
     }
 
+    @Override
     public void completeTask (Task task){
         Log.d(TAG, "completeTask: ");
         checkNotNull(task);
@@ -85,6 +87,7 @@ public class TasksLocalDataSource implements TasksDataSource{
         sqLiteDatabase.close();
     }
 
+    @Override
     public void activateTask (Task task) {
         Log.d(TAG, "activateTask: ");
         checkNotNull(task);
@@ -183,10 +186,5 @@ public class TasksLocalDataSource implements TasksDataSource{
         sqLiteDatabase.close();
     }
 
-    public interface SyncCallback {
-        void loadTime(String s);
-        void getDataAddedSync(List<Task> taskList);
-        void getDataDeletedSync(List<Task> taskList);
-        void getDataModifiedSync(List<Task> taskList);
-    }
+
 }

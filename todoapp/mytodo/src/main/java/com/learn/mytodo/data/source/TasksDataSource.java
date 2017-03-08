@@ -1,6 +1,7 @@
 package com.learn.mytodo.data.source;
 
 import com.learn.mytodo.data.Task;
+import com.learn.mytodo.data.source.local.TasksLocalDataSource;
 
 import java.util.List;
 
@@ -10,9 +11,16 @@ import java.util.List;
 
 public interface TasksDataSource {
 
-     interface LoadTasksCallback {
+    interface LoadTasksCallback {
         void onTasksLoaded(List<Task> task);
         void onDataNotAvailabel();
+    }
+
+    interface SyncCallback {
+        void loadTime(String s);
+        void getDataAddedSync(List<Task> taskList);
+        void getDataDeletedSync(List<Task> taskList);
+        void getDataModifiedSync(List<Task> taskList);
     }
 
     void getTask(LoadTasksCallback loadTasksCallback);
