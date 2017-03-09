@@ -1,6 +1,8 @@
 package com.learn.mytodo.data.source.remote;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -17,10 +19,13 @@ import com.learn.mytodo.data.source.local.TasksLocalDataSource;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.OkHttpClient;
 
 /**
  * Created by dong on 2017/2/26 0026.
@@ -30,10 +35,23 @@ public class TasksRemoteDataSource implements TasksDataSource{
     private static final String TAG = "TasksRemoteDataSource";
     private RequestQueue mRequestQueue;
     private TasksLocalDataSource mTasksLocalDataSource;
+    private OkHttpClient mOkHttpClient;
+    private TasksHandler mTasksHandler;
 
     public TasksRemoteDataSource(Context context) {
         mRequestQueue = Volley.newRequestQueue(context);
         mTasksLocalDataSource = new TasksLocalDataSource(context);
+        mTasksHandler = new TasksHandler();
+    }
+
+    class TasksHandler extends Handler{
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                default:
+                    break;
+            }
+        }
     }
 
     @Override
@@ -207,6 +225,24 @@ public class TasksRemoteDataSource implements TasksDataSource{
             }
         };
         mRequestQueue.add(stringRequest);
+    }
+
+
+    public void testOkHttp() {
+        mOkHttpClient = new OkHttpClient();
+        try {
+            String s = run("www.baidu.com");
+            Log.d(TAG, "testOkHttp: s = " + s);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private String run(String url) throws IOException{
+        okhttp3.Request request = new okhttp3.Request.Builder().url(url).build();
+        okhttp3.Response response = mOkHttpClient.newCall(request).execute();
+        return response.body().toString();
     }
 
     public interface TimeCallback {

@@ -20,19 +20,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class TasksLocalDataSource implements TasksDataSource{
 
-    private TasksDBHelper mTasksDBHelper;
+    private DBHelper mDBHelper;
     private String mTime;
     private static final String[] projection = {
-            TasksDBHelper.ID,
-            TasksDBHelper.TITLE,
-            TasksDBHelper.DESCRIPTION,
-            TasksDBHelper.COMPLETED
+            DBHelper.ID,
+            DBHelper.TITLE,
+            DBHelper.DESCRIPTION,
+            DBHelper.COMPLETED
     };
     private String TAG = "TasksLocalDataSource";
 
     public TasksLocalDataSource(Context context) {
         checkNotNull(context);
-        mTasksDBHelper = new TasksDBHelper(context);
+        mDBHelper = new DBHelper(context);
         mTime = "" + System.currentTimeMillis();
     }
 
@@ -40,8 +40,8 @@ public class TasksLocalDataSource implements TasksDataSource{
     public void getTask(TasksLocalDataSource.LoadTasksCallback loadTasksCallback){
         Log.d(TAG, "getTask: ");
         List<Task> taskList = new ArrayList<Task>();
-        SQLiteDatabase database = mTasksDBHelper.getReadableDatabase();
-        Cursor cursor = database.query(TasksDBHelper.TASKS_TABLE_NAME, projection, null, null, null, null, null);
+        SQLiteDatabase database = mDBHelper.getReadableDatabase();
+        Cursor cursor = database.query(DBHelper.TASKS_TABLE_NAME, projection, null, null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 String taskId = cursor.getString(cursor.getColumnIndexOrThrow(projection[0]));
@@ -62,15 +62,15 @@ public class TasksLocalDataSource implements TasksDataSource{
     public void saveTask(Task task){
         Log.d(TAG, "saveTask: ");
         checkNotNull(task);
-        SQLiteDatabase sqLiteDatabase = mTasksDBHelper.getWritableDatabase();
+        SQLiteDatabase sqLiteDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(TasksDBHelper.ID,task.getmId());
-        contentValues.put(TasksDBHelper.TITLE,task.getmTitle());
-        contentValues.put(TasksDBHelper.DESCRIPTION,task.getmDescription());
-        contentValues.put(TasksDBHelper.COMPLETED,task.ismCompleted());
-        contentValues.put(TasksDBHelper.STATUS, Task.Status.STATUS_ADD);
-        contentValues.put(TasksDBHelper.MODIFIED_TIME, mTime);
-        sqLiteDatabase.insert(TasksDBHelper.TASKS_TABLE_NAME, null, contentValues);
+        contentValues.put(DBHelper.ID,task.getmId());
+        contentValues.put(DBHelper.TITLE,task.getmTitle());
+        contentValues.put(DBHelper.DESCRIPTION,task.getmDescription());
+        contentValues.put(DBHelper.COMPLETED,task.ismCompleted());
+        contentValues.put(DBHelper.STATUS, Task.Status.STATUS_ADD);
+        contentValues.put(DBHelper.MODIFIED_TIME, mTime);
+        sqLiteDatabase.insert(DBHelper.TASKS_TABLE_NAME, null, contentValues);
         sqLiteDatabase.close();
     }
 
@@ -78,12 +78,12 @@ public class TasksLocalDataSource implements TasksDataSource{
     public void completeTask (Task task){
         Log.d(TAG, "completeTask: ");
         checkNotNull(task);
-        SQLiteDatabase sqLiteDatabase = mTasksDBHelper.getWritableDatabase();
+        SQLiteDatabase sqLiteDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(TasksDBHelper.COMPLETED,1);
-        contentValues.put(TasksDBHelper.STATUS, Task.Status.STATUS_MODIFIED);
-        contentValues.put(TasksDBHelper.MODIFIED_TIME, mTime);
-        sqLiteDatabase.update(TasksDBHelper.TASKS_TABLE_NAME, contentValues, "id=?", new String[]{task.getmId()});
+        contentValues.put(DBHelper.COMPLETED,1);
+        contentValues.put(DBHelper.STATUS, Task.Status.STATUS_MODIFIED);
+        contentValues.put(DBHelper.MODIFIED_TIME, mTime);
+        sqLiteDatabase.update(DBHelper.TASKS_TABLE_NAME, contentValues, "id=?", new String[]{task.getmId()});
         sqLiteDatabase.close();
     }
 
@@ -91,19 +91,19 @@ public class TasksLocalDataSource implements TasksDataSource{
     public void activateTask (Task task) {
         Log.d(TAG, "activateTask: ");
         checkNotNull(task);
-        SQLiteDatabase sqLiteDatabase = mTasksDBHelper.getWritableDatabase();
+        SQLiteDatabase sqLiteDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(TasksDBHelper.COMPLETED,0);
-        contentValues.put(TasksDBHelper.STATUS, Task.Status.STATUS_MODIFIED);
-        contentValues.put(TasksDBHelper.MODIFIED_TIME, mTime);
-        sqLiteDatabase.update(TasksDBHelper.TASKS_TABLE_NAME, contentValues, "id=?", new String[]{task.getmId()});
+        contentValues.put(DBHelper.COMPLETED,0);
+        contentValues.put(DBHelper.STATUS, Task.Status.STATUS_MODIFIED);
+        contentValues.put(DBHelper.MODIFIED_TIME, mTime);
+        sqLiteDatabase.update(DBHelper.TASKS_TABLE_NAME, contentValues, "id=?", new String[]{task.getmId()});
         sqLiteDatabase.close();
     }
 
     /*public void getTime(SyncCallback timeCallback) {
         String time = null;
-        SQLiteDatabase database = mTasksDBHelper.getReadableDatabase();
-        Cursor cursor = database.query(TasksDBHelper.TASKS_TABLE_NAME, new String[]{"time"}, null, null, null, null, "time", "1");
+        SQLiteDatabase database = mDBHelper.getReadableDatabase();
+        Cursor cursor = database.query(DBHelper.TASKS_TABLE_NAME, new String[]{"time"}, null, null, null, null, "time", "1");
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 time = cursor.getString(cursor.getColumnIndexOrThrow("time"));
@@ -118,8 +118,8 @@ public class TasksLocalDataSource implements TasksDataSource{
 
     public void getDateAdded(SyncCallback syncCallback) {
         List<Task> taskAdded = new ArrayList<Task>();
-        SQLiteDatabase database = mTasksDBHelper.getReadableDatabase();
-        Cursor cursor = database.query(TasksDBHelper.TASKS_TABLE_NAME, projection, "status like 1", null, null, null, null);
+        SQLiteDatabase database = mDBHelper.getReadableDatabase();
+        Cursor cursor = database.query(DBHelper.TASKS_TABLE_NAME, projection, "status like 1", null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 String taskId = cursor.getString(cursor.getColumnIndexOrThrow(projection[0]));
@@ -138,8 +138,8 @@ public class TasksLocalDataSource implements TasksDataSource{
 
     public void getDateDeleted(SyncCallback syncCallback) {
         List<Task> taskDeleted = new ArrayList<Task>();
-        SQLiteDatabase database = mTasksDBHelper.getReadableDatabase();
-        Cursor cursor = database.query(TasksDBHelper.TASKS_TABLE_NAME, projection, "status like -1", null, null, null, null);
+        SQLiteDatabase database = mDBHelper.getReadableDatabase();
+        Cursor cursor = database.query(DBHelper.TASKS_TABLE_NAME, projection, "status like -1", null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 String taskId = cursor.getString(cursor.getColumnIndexOrThrow(projection[0]));
@@ -158,8 +158,8 @@ public class TasksLocalDataSource implements TasksDataSource{
 
     public void getDataModified(SyncCallback syncCallback) {
         List<Task> taskModified = new ArrayList<Task>();
-        SQLiteDatabase database = mTasksDBHelper.getReadableDatabase();
-        Cursor cursor = database.query(TasksDBHelper.TASKS_TABLE_NAME, projection, "status like 2", null, null, null, null);
+        SQLiteDatabase database = mDBHelper.getReadableDatabase();
+        Cursor cursor = database.query(DBHelper.TASKS_TABLE_NAME, projection, "status like 2", null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 String taskId = cursor.getString(cursor.getColumnIndexOrThrow(projection[0]));
@@ -178,11 +178,11 @@ public class TasksLocalDataSource implements TasksDataSource{
 
     public void syncComplete(Task t) {
         checkNotNull(t);
-        SQLiteDatabase sqLiteDatabase = mTasksDBHelper.getWritableDatabase();
+        SQLiteDatabase sqLiteDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(TasksDBHelper.STATUS, Task.Status.STATUS_SYNC);
-        //contentValues.put(TasksDBHelper.MODIFIED_TIME, mTime);
-        sqLiteDatabase.update(TasksDBHelper.TASKS_TABLE_NAME, contentValues, "id=?", new String[]{t.getmId()});
+        contentValues.put(DBHelper.STATUS, Task.Status.STATUS_SYNC);
+        //contentValues.put(DBHelper.MODIFIED_TIME, mTime);
+        sqLiteDatabase.update(DBHelper.TASKS_TABLE_NAME, contentValues, "id=?", new String[]{t.getmId()});
         sqLiteDatabase.close();
     }
 

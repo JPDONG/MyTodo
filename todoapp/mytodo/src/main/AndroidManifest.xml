@@ -19,9 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".addedittask.AddEditTaskActivity">
-
-        </activity>
+        <activity android:name=".addedittask.AddEditTaskActivity"/>
+        <activity android:name=".user.LoginActivity"/>
+        <activity android:name=".taskdetail.TaskDetailActivity"/>
     </application>
 
 </manifest>

@@ -5,4 +5,8 @@ package com.learn.mytodo.data.source.remote;
  */
 
 public class UsersRemoteDateSource {
+
+    public void register(String name, String password) {
+
+    }
 }

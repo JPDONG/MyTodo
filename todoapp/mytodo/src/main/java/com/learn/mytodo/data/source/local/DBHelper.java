@@ -9,7 +9,7 @@ import android.util.Log;
  * Created by dongjiangpeng on 2017/2/22 0022.
  */
 
-public class TasksDBHelper extends SQLiteOpenHelper {
+public class DBHelper extends SQLiteOpenHelper {
 
     public static final int DB_VERSION = 1;
 
@@ -43,10 +43,11 @@ public class TasksDBHelper extends SQLiteOpenHelper {
             DESCRIPTION + TEXT_TYPE + COMMA_SEP +
             COMPLETED + BOOLEAN_TYPE + ",status text,time text)";
 
-    //public static final String SQL_CREATE_USERS = "CREATE TABLE " + USERS_TABLE_NAME + "(id text primary key,name text,password
-    private String TAG = "TasksDBHelper";
+    public static final String SQL_CREATE_USERS = "CREATE TABLE " + USERS_TABLE_NAME +
+            "(userid text primary key,name text,password text,token text,phone text,email text)";
+    private String TAG = "DBHelper";
 
-    public TasksDBHelper(Context context){
+    public DBHelper(Context context){
         super(context, DB_NAME, null, DB_VERSION);
     }
 
@@ -54,6 +55,7 @@ public class TasksDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         Log.d(TAG, "onCreate: SQL_CREATE_ENTRIES = " + SQL_CREATE_TASKS);
         sqLiteDatabase.execSQL(SQL_CREATE_TASKS);
+        sqLiteDatabase.execSQL(SQL_CREATE_USERS);
     }
 
     @Override
