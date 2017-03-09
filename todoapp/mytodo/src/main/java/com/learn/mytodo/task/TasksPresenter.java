@@ -1,15 +1,22 @@
 package com.learn.mytodo.task;
 
+import android.app.IntentService;
 import android.content.Context;
+import android.content.Intent;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.learn.mytodo.data.Task;
 import com.learn.mytodo.data.source.TasksDataSource;
 import com.learn.mytodo.data.source.TasksRepository;
+import com.learn.mytodo.data.source.TasksSyncService;
 import com.learn.mytodo.data.source.local.TasksLocalDataSource;
 import com.learn.mytodo.data.source.remote.TasksRemoteDataSource;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.R.attr.name;
 
 /**
  * Created by dongjiangpeng on 2017/2/28 0028.
@@ -17,14 +24,17 @@ import java.util.List;
 
 public class TasksPresenter implements TasksContract.TasksPresenter{
 
+    private static final String TAG = "TasksPresenter";
+
     private TasksRepository mTasksRepository;
     private boolean mFirstLoad;
     private TasksContract.TasksView mTasksView;
+    private Context mContext;
 
 
     public TasksPresenter(Context context) {
         mTasksRepository = TasksRepository.getInstance(new TasksLocalDataSource(context), new TasksRemoteDataSource(context));
-
+        mContext = context;
     }
 
     public void loadTasks(boolean forceUpdate) {
@@ -73,5 +83,11 @@ public class TasksPresenter implements TasksContract.TasksPresenter{
 
     public void completeTask(Task task) {
 
+    }
+
+    public void syncData() {
+        Log.d(TAG, "syncData: ");
+        Intent intent = new Intent(mContext,TasksSyncService.class);
+        mContext.startService(intent);
     }
 }

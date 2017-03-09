@@ -1,5 +1,8 @@
 package com.learn.mytodo.data.source;
 
+import android.app.IntentService;
+import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.learn.mytodo.data.Task;
@@ -40,6 +43,7 @@ public class TasksRepository implements TasksDataSource{
     public void destoryInstance() {
         INSTANCE = null;
     }
+
 
     @Override
     public void getTask(final TasksRepository.LoadTasksCallback loadTasksCallback) {
@@ -155,6 +159,7 @@ public class TasksRepository implements TasksDataSource{
                 });
             }
         });*/
+        //TasksSyncService tasksSyncService = new TasksSyncService("sync");
         mTasksLocalDataSource.getDateAdded(new TasksLocalDataSource.SyncCallback() {
             @Override
             public void loadTime(String s) {

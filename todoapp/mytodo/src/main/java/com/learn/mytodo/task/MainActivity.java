@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     private TasksLocalDataSource tasksLocalDataSource;
     private TasksRemoteDataSource tasksRemoteDataSource;
     private ImageView mUserIcon;
+    private TasksPresenter mTasksPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         tasksLocalDataSource = new TasksLocalDataSource(this);
         tasksRemoteDataSource = new TasksRemoteDataSource(this);
         mTasksRepository = TasksRepository.getInstance(tasksLocalDataSource, tasksRemoteDataSource);
+        mTasksPresenter = new TasksPresenter(this);
         initViews();
     }
 
@@ -107,7 +109,8 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 Utils.showToast(this,getResources().getString(R.string.item_search));
                 return true;
             case R.id.item_sync:
-                mTasksRepository.syncData();
+                //mTasksRepository.syncData();
+                mTasksPresenter.syncData();
                 Utils.showToast(this,getResources().getString(R.string.item_sync));
                 return true;
             case R.id.item1:
