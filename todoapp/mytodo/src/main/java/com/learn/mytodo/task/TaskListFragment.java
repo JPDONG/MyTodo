@@ -133,8 +133,8 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
         return view;
     }
 
-    private void showSnackerBar(String s) {
-        Snackbar.make(getView(), s, Snackbar.LENGTH_LONG).show();
+    public void showSnackerMessage(String message) {
+        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
     }
 
     private void loadTask() {

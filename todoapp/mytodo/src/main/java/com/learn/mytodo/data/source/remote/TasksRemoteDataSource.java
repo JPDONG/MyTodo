@@ -31,31 +31,29 @@ import okhttp3.OkHttpClient;
  * Created by dong on 2017/2/26 0026.
  */
 
-public class TasksRemoteDataSource implements TasksDataSource{
+public class TasksRemoteDataSource {
     private static final String TAG = "TasksRemoteDataSource";
     private RequestQueue mRequestQueue;
     private TasksLocalDataSource mTasksLocalDataSource;
     private OkHttpClient mOkHttpClient;
-    private TasksHandler mTasksHandler;
 
     public TasksRemoteDataSource(Context context) {
         mRequestQueue = Volley.newRequestQueue(context);
         mTasksLocalDataSource = new TasksLocalDataSource(context);
-        mTasksHandler = new TasksHandler();
+
     }
 
-    class TasksHandler extends Handler{
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                default:
-                    break;
-            }
-        }
+    public interface LoadTasksCallback {
+        void onTasksLoaded(List<Task> task);
+        void onDataNotAvailabel();
     }
 
-    @Override
-    public void getTask(final TasksRemoteDataSource.LoadTasksCallback loadTasksCallback) {
+    public interface Result {
+        void success();
+        void failure();
+    }
+
+    public void getTask(final LoadTasksCallback loadTasksCallback) {
         Log.d(TAG, "getTask: ");
         //String url = "http://t.tt";
         //String url = "http://172.10.1.102:8080/todoservlet/MySQLConnection";
@@ -82,8 +80,8 @@ public class TasksRemoteDataSource implements TasksDataSource{
         mRequestQueue.add(stringRequest);
     }
 
-    @Override
-    public void saveTask(final Task task) {
+
+    public void saveTask(final Task task, final Result result) {
         Log.d(TAG, "saveTask: ");
         //String url = "http://t.tt";
         //String url = "http://172.10.1.102:8080/todoservlet/MySQLConnection";
@@ -92,12 +90,14 @@ public class TasksRemoteDataSource implements TasksDataSource{
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "onResponse: " + response.toString());
-                mTasksLocalDataSource.syncComplete(task);
+                result.success();
+                //mTasksLocalDataSource.syncComplete(task);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                result.failure();
             }
         }){
             @Override
@@ -114,7 +114,7 @@ public class TasksRemoteDataSource implements TasksDataSource{
         mRequestQueue.add(stringRequest);
     }
 
-    @Override
+
     public void activateTask(final Task task) {
         //String url = "http://172.10.1.102:8080/todoservlet/MySQLConnection";
         String url = "http://10.0.2.2:8080/todoservlet/MySQLConnection";
@@ -144,7 +144,7 @@ public class TasksRemoteDataSource implements TasksDataSource{
         mRequestQueue.add(stringRequest);
     }
 
-    @Override
+
     public void completeTask(final Task task) {
         //String url = "http://172.10.1.102:8080/todoservlet/MySQLConnection";
         String url = "http://10.0.2.2:8080/todoservlet/MySQLConnection";
@@ -199,18 +199,20 @@ public class TasksRemoteDataSource implements TasksDataSource{
         mRequestQueue.add(stringRequest);
     }
 
-    public void updateTask(final Task t) {
+    public void updateTask(final Task t, final Result result) {
         String url = "http://10.0.2.2:8080/todoservlet/MySQLConnection";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "onResponse: " + response.toString());
-                mTasksLocalDataSource.syncComplete(t);
+                //mTasksLocalDataSource.syncComplete(t);
+                result.success();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                result.failure();
             }
         }){
             @Override

@@ -46,7 +46,7 @@ public class TasksPresenter implements TasksContract.TasksPresenter{
         if (forceUpdate) {
             mTasksRepository.refreshTasks();
         }
-        mTasksRepository.getTask(new TasksDataSource.LoadTasksCallback() {
+        mTasksRepository.getTask(new TasksRepository.LoadTasksCallback() {
             @Override
             public void onTasksLoaded(List<Task> task) {
                 List<Task> tasksShow = new ArrayList<Task>();
@@ -90,4 +90,16 @@ public class TasksPresenter implements TasksContract.TasksPresenter{
         Intent intent = new Intent(mContext,TasksSyncService.class);
         mContext.startService(intent);
     }
+
+    TasksSyncService.SyncResult syncResult = new TasksSyncService.SyncResult() {
+        @Override
+        public void syncSuccess() {
+            mTasksView.showSnackerMessage("sync success");
+        }
+
+        @Override
+        public void syncFailure() {
+            mTasksView.showSnackerMessage("sync fail");
+        }
+    };
 }

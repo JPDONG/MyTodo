@@ -18,5 +18,6 @@ public interface TasksContract {
     interface TasksView {
         void showTasks(List<Task> tasks);
         void setPresenter(TasksContract.TasksPresenter tasksPresenter);
+        void showSnackerMessage(String message);
     }
 }

@@ -2,8 +2,10 @@ package com.learn.mytodo.data.source;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.os.Handler;
 
 import com.learn.mytodo.data.Task;
 import com.learn.mytodo.data.source.local.TasksLocalDataSource;
@@ -14,13 +16,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.os.Looper.myLooper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by dongjiangpeng on 2017/2/22 0022.
  */
 
-public class TasksRepository implements TasksDataSource{
+public class TasksRepository {
     private static  final String TAG = "TasksRepository";
     private static TasksRepository INSTANCE = null;
     private final TasksLocalDataSource mTasksLocalDataSource;
@@ -44,8 +47,11 @@ public class TasksRepository implements TasksDataSource{
         INSTANCE = null;
     }
 
+    public interface LoadTasksCallback {
+        void onTasksLoaded(List<Task> task);
+        void onDataNotAvailabel();
+    }
 
-    @Override
     public void getTask(final TasksRepository.LoadTasksCallback loadTasksCallback) {
         checkNotNull(loadTasksCallback);
         if (mCacheTasks != null && !mCacheIsDirty) {
@@ -81,8 +87,8 @@ public class TasksRepository implements TasksDataSource{
         mCacheIsDirty = false;
     }
 
-    private void getTaskFromRemoteDataSource(final TasksRemoteDataSource.LoadTasksCallback loadTasksCallback) {
-        mTasksRemoteDataSource.getTask(new LoadTasksCallback() {
+    private void getTaskFromRemoteDataSource(final TasksRepository.LoadTasksCallback loadTasksCallback) {
+        mTasksRemoteDataSource.getTask(new TasksRemoteDataSource.LoadTasksCallback() {
             @Override
             public void onTasksLoaded(List<Task> task) {
                 refreshCache(task);
@@ -105,7 +111,6 @@ public class TasksRepository implements TasksDataSource{
 
     }
 
-    @Override
     public void saveTask(Task task) {
         checkNotNull(task);
         mTasksLocalDataSource.saveTask(task);
@@ -117,7 +122,6 @@ public class TasksRepository implements TasksDataSource{
 
     }
 
-    @Override
     public void activateTask(Task task) {
         checkNotNull(task);
         mTasksLocalDataSource.activateTask(task);
@@ -130,7 +134,6 @@ public class TasksRepository implements TasksDataSource{
 
     }
 
-    @Override
     public void completeTask(Task task) {
         checkNotNull(task);
         mTasksLocalDataSource.completeTask(task);
@@ -143,6 +146,24 @@ public class TasksRepository implements TasksDataSource{
     }
 
     public void syncData() {
+        /*final int MSG_SAVE_REMOTE = 100;
+        final int MSG_UPDATE_REMOTE = 101;
+
+        Handler syncHandler = new Handler(myLooper(), new Handler.Callback() {
+
+            @Override
+            public boolean handleMessage(Message message) {
+                switch (message.what) {
+                    case MSG_SAVE_REMOTE:
+                        break;
+                    case MSG_UPDATE_REMOTE:
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });*/
         /*final String[] serverTime = new String[1];
         serverTime[0] = null;
         mTasksRemoteDataSource.getTime(new TasksRemoteDataSource.TimeCallback() {
@@ -168,8 +189,18 @@ public class TasksRepository implements TasksDataSource{
 
             @Override
             public void getDataAddedSync(List<Task> taskList) {
-                for (Task t : taskList) {
-                    mTasksRemoteDataSource.saveTask(t);
+                for (final Task t : taskList) {
+                    mTasksRemoteDataSource.saveTask(t, new TasksRemoteDataSource.Result() {
+                        @Override
+                        public void success() {
+                            mTasksLocalDataSource.completeTask(t);
+                        }
+
+                        @Override
+                        public void failure() {
+
+                        }
+                    });
                 }
             }
 
@@ -201,8 +232,18 @@ public class TasksRepository implements TasksDataSource{
 
             @Override
             public void getDataModifiedSync(List<Task> taskList) {
-                for (Task t : taskList) {
-                    mTasksRemoteDataSource.updateTask(t);
+                for (final Task t : taskList) {
+                    mTasksRemoteDataSource.updateTask(t, new TasksRemoteDataSource.Result() {
+                        @Override
+                        public void success() {
+                            mTasksLocalDataSource.completeTask(t);
+                        }
+
+                        @Override
+                        public void failure() {
+
+                        }
+                    });
                 }
             }
         });
