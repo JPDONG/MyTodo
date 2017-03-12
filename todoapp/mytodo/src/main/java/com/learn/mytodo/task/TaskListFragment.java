@@ -99,12 +99,12 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
                         String description = editDescription.getText().toString();
                         Log.d(TAG, "onClick: title = " + title + ", description = " + description);
                         if ("".equals(title.trim())) {
-                            showSnackerBar("nothing to add");
+                            showSnackerMessage("nothing to add");
                             return;
                         }
                         Task task = new Task(title, description);
                         addTask(task);
-                        showSnackerBar("add sucess");
+                        showSnackerMessage("add sucess");
                         loadTask();
                         if (mTaskListAdapter.getItemCount() - 1 >= 0) {
                             mRecyclerView.smoothScrollToPosition(mTaskListAdapter.getItemCount() - 1);
@@ -240,12 +240,12 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
                     if (task.ismCompleted()) {
                         //Log.d(TAG, "onClick: activateTask :" + task);
                         mTasksRepository.activateTask(task);
-                        showSnackerBar("activate task");
+                        showSnackerMessage("activate task");
                         holder.mTitle.setPaintFlags(holder.mTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                     } else {
                         //Log.d(TAG, "onClick: completeTask :" + task);
                         mTasksRepository.completeTask(task);
-                        showSnackerBar("complete task");
+                        showSnackerMessage("complete task");
                         holder.mTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
                     }
                     loadTask();

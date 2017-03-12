@@ -25,18 +25,14 @@ public class User {
     @Nullable
     private String password;
 
-    public User(String userId, String token) {
+    public User(String userId) {
         this.userId = userId;
         this.token = token;
     }
 
-    public User(String userId, String name, String token, String phone, String email, String password) {
+    public User(String userId, String name) {
         this.userId = userId;
         this.name = name;
-        this.token = token;
-        this.phone = phone;
-        this.email = email;
-        this.password = password;
     }
 
     public String getUserId() {

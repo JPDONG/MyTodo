@@ -24,6 +24,7 @@
         <activity android:name=".taskdetail.TaskDetailActivity"/>
 
         <service android:name=".data.source.TasksSyncService"/>
+        <service android:name=".data.source.UserIdentityService"/>
     </application>
 
 </manifest>

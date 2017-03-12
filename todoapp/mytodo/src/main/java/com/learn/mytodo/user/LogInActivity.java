@@ -3,11 +3,13 @@ package com.learn.mytodo.user;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -15,12 +17,14 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.learn.mytodo.R;
+import com.learn.mytodo.data.source.UserIdentityService;
 
 /**
  * Created by dongjiangpeng on 2017/3/6 0006.
  */
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+    private String TAG = "LoginActivity";
     private Toolbar mToolbar;
     private FrameLayout mFrameLayout;
     private FragmentManager mFragmentManager;
@@ -28,14 +32,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: ");
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.login_activity);
         initViews();
     }
 
     private void initViews() {
+        Log.d(TAG, "initViews: ");
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         LoginFragment loginFragment = new LoginFragment();

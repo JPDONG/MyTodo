@@ -44,7 +44,7 @@ public class DBHelper extends SQLiteOpenHelper {
             COMPLETED + BOOLEAN_TYPE + ",status text,time text)";
 
     public static final String SQL_CREATE_USERS = "CREATE TABLE " + USERS_TABLE_NAME +
-            "(userid text primary key,name text,password text,token text,phone text,email text)";
+            "(userid text primary key,name text,password text,token text,phone text,email text,current integer)";
     private String TAG = "DBHelper";
 
     public DBHelper(Context context){
