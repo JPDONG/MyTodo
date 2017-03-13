@@ -3,6 +3,7 @@ package com.learn.mytodo.data.source;
 import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -22,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.learn.mytodo.data.User;
+import com.learn.mytodo.data.source.remote.TasksRemoteDataSource;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,9 +43,10 @@ public class UserIdentityService extends Service {
     private final int MSG_SERVICE_START = 104;
     private ServiceHandler mServiceHandler;
     private UserResult mResult;
+    private ResultBinder mResultBinder;
 
 
-    public interface UserResult extends Parcelable {
+    public interface UserResult {
         void success(String s);
         void fail(String s);
     }
@@ -108,6 +111,7 @@ public class UserIdentityService extends Service {
         handlerThread.start();
         Looper looper = handlerThread.getLooper();
         mServiceHandler = new ServiceHandler(looper);
+        mResultBinder = new ResultBinder();
     }
 
     @Override
@@ -207,5 +211,11 @@ public class UserIdentityService extends Service {
             }
         };
         Volley.newRequestQueue(this).add(stringRequest);
+    }
+
+    public class ResultBinder extends Binder{
+        public void setResultCallback(UserResult result) {
+            mResult = result;
+        }
     }
 }

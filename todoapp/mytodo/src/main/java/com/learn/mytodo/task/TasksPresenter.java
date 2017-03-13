@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.R.attr.name;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by dongjiangpeng on 2017/2/28 0028.
@@ -40,6 +41,12 @@ public class TasksPresenter implements TasksContract.TasksPresenter{
     public void loadTasks(boolean forceUpdate) {
         loadTasks(forceUpdate|mFirstLoad, true);
         mFirstLoad = false;
+    }
+
+    @Override
+    public void openTaskDetail(Task task) {
+        checkNotNull(task);
+        mTasksView.showTaskDetail(task);
     }
 
     private void loadTasks(boolean forceUpdate, boolean showLoadingUI) {
@@ -78,11 +85,15 @@ public class TasksPresenter implements TasksContract.TasksPresenter{
     }
 
     public void activateTask(Task task) {
-
+        checkNotNull(task);
+        mTasksRepository.activateTask(task);
+        mTasksView.showSnackerMessage("activate task");
     }
 
     public void completeTask(Task task) {
-
+        checkNotNull(task);
+        mTasksRepository.completeTask(task);
+        mTasksView.showSnackerMessage("complete task");
     }
 
     public void syncData() {

@@ -43,7 +43,7 @@ public class RegisterFragment extends Fragment{
                 if ("".equals(name) || "".equals(password)) {
                     return;
                 }
-                Intent registerIntent = new Intent(getContext(), UserIdentityService.class);
+                Intent registerIntent = new Intent(getActivity(), UserIdentityService.class);
                 registerIntent.putExtra("operation", "register");
                 registerIntent.putExtra("name", name);
                 registerIntent.putExtra("password", password);

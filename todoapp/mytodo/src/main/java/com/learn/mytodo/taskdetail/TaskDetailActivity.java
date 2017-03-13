@@ -14,6 +14,8 @@ import com.learn.mytodo.R;
  */
 
 public class TaskDetailActivity extends AppCompatActivity {
+    public static final String TASK_ID = "task_id";
+
     private Toolbar mToolbar;
 
     @Override

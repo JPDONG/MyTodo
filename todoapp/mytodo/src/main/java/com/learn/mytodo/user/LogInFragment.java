@@ -1,14 +1,14 @@
 package com.learn.mytodo.user;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.learn.mytodo.R;
-import com.learn.mytodo.data.UserIdentityResult;
 import com.learn.mytodo.data.source.UserIdentityService;
 
 /**
@@ -29,6 +28,21 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private EditText mPasswordText;
     private Button mLoginButton;
     private Button mRegisterButton;
+    private UserIdentityService.ResultBinder mResultBinder;
+    private UserIdentityService.UserResult mUserResult;
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mResultBinder = (UserIdentityService.ResultBinder) iBinder;
+            mResultBinder.setResultCallback(mUserResult);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    };
 
     public LoginFragment() {
     }
@@ -88,41 +102,26 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         if ("".equals(name) || "".equals(password)) {
             return;
         }
-        UserIdentityService.UserResult result = new UserIdentityService.UserResult() {
-
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            @Override
-            public void writeToParcel(Parcel dest, int flags) {
-
-            }
-
+        mUserResult = new UserIdentityService.UserResult() {
             @Override
             public void success(String s) {
-                Log.d(TAG, "success: ");
                 showSnackerMessage(s);
             }
 
             @Override
             public void fail(String s) {
-                Log.d(TAG, "fail: ");
                 showSnackerMessage(s);
             }
         };
-        UserIdentityResult identityResult = new UserIdentityResult();
         Intent loginIntent = new Intent(getContext(), UserIdentityService.class);
         loginIntent.putExtra("operation", "login");
         loginIntent.putExtra("name", name);
         loginIntent.putExtra("password", password);
-        loginIntent.putExtra("result", result);
-        getActivity().startService(loginIntent);
+        //getActivity().startService(loginIntent);
+        getActivity().bindService(loginIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     public void showSnackerMessage(String message) {
         Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
     }
-
 }

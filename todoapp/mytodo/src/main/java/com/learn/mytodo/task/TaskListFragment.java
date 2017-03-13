@@ -1,6 +1,7 @@
 package com.learn.mytodo.task;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -28,6 +29,7 @@ import com.learn.mytodo.data.source.TasksDataSource;
 import com.learn.mytodo.data.source.TasksRepository;
 import com.learn.mytodo.data.source.local.TasksLocalDataSource;
 import com.learn.mytodo.data.source.remote.TasksRemoteDataSource;
+import com.learn.mytodo.taskdetail.TaskDetailActivity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -137,6 +139,13 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
         Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
     }
 
+    @Override
+    public void showTaskDetail(Task task) {
+        Intent intent = new Intent(getContext(), TaskDetailActivity.class);
+        intent.putExtra(TaskDetailActivity.TASK_ID, task.getmId());
+        startActivity(intent);
+    }
+
     private void loadTask() {
         //mTasksPresenter.loadTasks(false);
         /**
@@ -239,16 +248,20 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
                 public void onClick(View view) {
                     if (task.ismCompleted()) {
                         //Log.d(TAG, "onClick: activateTask :" + task);
-                        mTasksRepository.activateTask(task);
-                        showSnackerMessage("activate task");
+                        mTasksPresenter.activateTask(task);
                         holder.mTitle.setPaintFlags(holder.mTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                     } else {
                         //Log.d(TAG, "onClick: completeTask :" + task);
-                        mTasksRepository.completeTask(task);
-                        showSnackerMessage("complete task");
+                        mTasksPresenter.completeTask(task);
                         holder.mTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
                     }
                     loadTask();
+                }
+            });
+            holder.mItemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mTasksPresenter.openTaskDetail(task);
                 }
             });
         }
@@ -277,9 +290,11 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
         private TextView mTitle;
         private TextView mDescription;
         private CheckBox mCheckBox;
+        private View mItemView;
 
         public ListItemViewHolder(View itemView) {
             super(itemView);
+            mItemView = itemView;
             mTitle = (TextView) itemView.findViewById(R.id.task_title);
             mDescription = (TextView) itemView.findViewById(R.id.task_description);
             mCheckBox = (CheckBox) itemView.findViewById(R.id.task_checkbox);
