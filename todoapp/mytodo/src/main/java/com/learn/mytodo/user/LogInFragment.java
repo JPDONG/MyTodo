@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private Button mRegisterButton;
     private UserIdentityService.ResultBinder mResultBinder;
     private UserIdentityService.UserResult mUserResult;
+    private Intent loginIntent;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
@@ -68,6 +70,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onPause() {
         super.onPause();
+        getActivity().unbindService(mServiceConnection);
+        getActivity().stopService(loginIntent);
     }
 
     @Override
@@ -78,6 +82,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
     }
 
     @Override
@@ -97,6 +102,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private void login() {
+        Log.d(TAG, "login: ");
         String name = mUserNameText.getText().toString().trim();
         String password = mPasswordText.getText().toString().trim();
         if ("".equals(name) || "".equals(password)) {
@@ -105,6 +111,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         mUserResult = new UserIdentityService.UserResult() {
             @Override
             public void success(String s) {
+                Log.d(TAG, "success: ");
                 showSnackerMessage(s);
             }
 
@@ -117,8 +124,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         loginIntent.putExtra("operation", "login");
         loginIntent.putExtra("name", name);
         loginIntent.putExtra("password", password);
-        //getActivity().startService(loginIntent);
+        getActivity().startService(loginIntent);
         getActivity().bindService(loginIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+        Log.d(TAG, "login: bindservice");
     }
 
     public void showSnackerMessage(String message) {

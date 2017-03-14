@@ -44,6 +44,7 @@ public class UserIdentityService extends Service {
     private ServiceHandler mServiceHandler;
     private UserResult mResult;
     private ResultBinder mResultBinder;
+    private int MSG_LOGIN_RESULT = 105;
 
 
     public interface UserResult {
@@ -100,7 +101,7 @@ public class UserIdentityService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return mResultBinder;
     }
 
     @Override
@@ -112,11 +113,12 @@ public class UserIdentityService extends Service {
         Looper looper = handlerThread.getLooper();
         mServiceHandler = new ServiceHandler(looper);
         mResultBinder = new ResultBinder();
+
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand: ");
+        Log.d(TAG, "onStartCommand: "+intent.getStringExtra("operation"));
         Message message = mServiceHandler.obtainMessage(MSG_SERVICE_START);
         message.obj = intent;
         message.arg1 = startId;
@@ -161,10 +163,15 @@ public class UserIdentityService extends Service {
             public void onResponse(String response) {
                 String result = response.toString().trim();
                 Log.d(TAG, "onResponse: " + result);
+                if ("fail".equals(result) || "wrong".equals(result)){
+                    Message message = mServiceHandler.obtainMessage(MSG_LOGIN_FAIL,result);
+                    mServiceHandler.sendMessage(message);
+                    return;
+                }
                 Bundle bundle = new Bundle();
                 bundle.putString("result", result);
                 bundle.putString("name", name);
-                Message message = mServiceHandler.obtainMessage(MSG_LOGIN_SUCCESS,bundle);
+                Message message = mServiceHandler.obtainMessage(MSG_LOGIN_RESULT,bundle);
                 mServiceHandler.sendMessage(message);
             }
         }, new Response.ErrorListener() {
