@@ -104,6 +104,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         String name = mUserNameText.getText().toString().trim();
         String password = mPasswordText.getText().toString().trim();
         if ("".equals(name) || "".equals(password)) {
+            showSnackerMessage("nothing to login");
             return;
         }
         mUserResult = new UserIdentityService.UserResult() {

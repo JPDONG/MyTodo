@@ -25,6 +25,7 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
     private TextView mDescription;
 
     private FloatingActionButton mFloatingActionButton;
+    private TaskDetailContract.Presenter mTasksDetailPresenter;
 
     public TaskDetailFragment(String task) {
         mTaskId = task;
@@ -37,9 +38,10 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
         mTitleText = (TextView) view.findViewById(R.id.task_detail_title);
         mDescription = (TextView) view.findViewById(R.id.task_detail_description);
         mCheckBox = (CheckBox) view.findViewById(R.id.task_detail_complete);
-        mFloatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab_edit_task);
+        mFloatingActionButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task);
         mCheckBox.setOnClickListener(this);
         mFloatingActionButton.setOnClickListener(this);
+        mTasksDetailPresenter.start(mTaskId);
         return view;
     }
 
@@ -61,7 +63,7 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
 
     @Override
     public void showTitle(String title) {
-
+        mTitleText.setText(title);
     }
 
     @Override
@@ -71,12 +73,12 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
 
     @Override
     public void showDescription(String description) {
-
+        mDescription.setText(description);
     }
 
     @Override
     public void showCompletionStatus(boolean complete) {
-
+        mCheckBox.setChecked(complete);
     }
 
     @Override
@@ -105,7 +107,13 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
     }
 
     @Override
+    public void setPresenter(TaskDetailContract.Presenter presenter) {
+        mTasksDetailPresenter = presenter;
+    }
+
+    @Override
     public void onClick(View view) {
 
     }
+
 }

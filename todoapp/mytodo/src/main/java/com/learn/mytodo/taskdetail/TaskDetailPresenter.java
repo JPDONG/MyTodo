@@ -25,7 +25,6 @@ class TaskDetailPresenter implements TaskDetailContract.Presenter{
         mContext = applicationContext;
         mTaskDetailView = taskDetailFragment;
         mTasksLocalDataSource = new TasksLocalDataSource(mContext);
-        start(taskId);
     }
 
     public void start(final String taskId) {

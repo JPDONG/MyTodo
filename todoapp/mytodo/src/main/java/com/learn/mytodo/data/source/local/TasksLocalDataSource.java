@@ -61,7 +61,7 @@ public class TasksLocalDataSource implements TasksDataSource {
     public void getTask(String taskId, TasksLocalDataSource.GetTaskCallback getTaskCallback) {
         Task task = null;
         SQLiteDatabase database = mDBHelper.getReadableDatabase();
-        Cursor cursor = database.query(DBHelper.TASKS_TABLE_NAME, projection, "id like " + taskId, null, null, null, null);
+        Cursor cursor = database.query(DBHelper.TASKS_TABLE_NAME, projection, "id like '" + taskId + "'", null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 String taskTitle = cursor.getString(cursor.getColumnIndexOrThrow(projection[1]));

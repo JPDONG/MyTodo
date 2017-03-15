@@ -19,6 +19,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     public static final String TASK_ID = "task_id";
 
     private Toolbar mToolbar;
+    private TaskDetailContract.Presenter mPresenter;
 
 
     @Override
@@ -35,8 +36,9 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         String taskId = getIntent().getStringExtra(TASK_ID);
         TaskDetailFragment taskDetailFragment = new TaskDetailFragment(taskId);
-        new TaskDetailPresenter(taskId, getApplicationContext(), taskDetailFragment);
         getSupportFragmentManager().beginTransaction().replace(R.id.taskdetail_content, taskDetailFragment).commit();
+        mPresenter = new TaskDetailPresenter(taskId, getApplicationContext(), taskDetailFragment);
+        taskDetailFragment.setPresenter(mPresenter);
     }
 
 }

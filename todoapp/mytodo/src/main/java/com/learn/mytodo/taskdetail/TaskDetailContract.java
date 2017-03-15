@@ -31,6 +31,8 @@ public interface TaskDetailContract {
         void showTaskMarkedActive();
 
         boolean isActive();
+
+        void setPresenter(Presenter presenter);
     }
 
     interface Presenter {
@@ -42,5 +44,7 @@ public interface TaskDetailContract {
         void completeTask();
 
         void activateTask();
+
+        void start(String mTaskId);
     }
 }

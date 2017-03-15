@@ -196,6 +196,7 @@ public class UserIdentityService extends Service {
     }
 
     private void register(final String name, final String password) {
+        Log.d(TAG, "register: ");
         String url = "http://10.0.2.2:8080/todoservlet/users";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override

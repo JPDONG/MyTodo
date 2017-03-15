@@ -47,8 +47,8 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-        tasksLocalDataSource = new TasksLocalDataSource(this);
-        tasksRemoteDataSource = new TasksRemoteDataSource(this);
+        tasksLocalDataSource = new TasksLocalDataSource(getApplicationContext());
+        tasksRemoteDataSource = new TasksRemoteDataSource(getApplicationContext());
         mTasksRepository = TasksRepository.getInstance(tasksLocalDataSource, tasksRemoteDataSource);
         initViews();
     }
@@ -146,8 +146,6 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 */
                 //
                 Intent intent = new Intent(this, LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 mDrawerLayout.closeDrawers();
                 break;
