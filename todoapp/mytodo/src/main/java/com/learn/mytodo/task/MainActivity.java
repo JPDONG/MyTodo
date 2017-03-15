@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         tasksLocalDataSource = new TasksLocalDataSource(this);
         tasksRemoteDataSource = new TasksRemoteDataSource(this);
         mTasksRepository = TasksRepository.getInstance(tasksLocalDataSource, tasksRemoteDataSource);
-        mTasksPresenter = new TasksPresenter(this);
         initViews();
     }
 
@@ -69,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         ActionBarDrawerToggle actionBarDrawerToggle=new ActionBarDrawerToggle(this, mDrawerLayout,mToolbar,R.string.open_string,R.string.close_string);
         actionBarDrawerToggle.syncState();
         TaskListFragment taskListFragment = new TaskListFragment();
+        mTasksPresenter = new TasksPresenter(this, taskListFragment);
+        taskListFragment.setPresenter(mTasksPresenter);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.content_frame,taskListFragment);

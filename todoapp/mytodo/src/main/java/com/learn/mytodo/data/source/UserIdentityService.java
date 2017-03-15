@@ -72,7 +72,6 @@ public class UserIdentityService extends Service {
                     mResult.fail("name already exist");
                     break;
                 case MSG_LOGIN_SUCCESS:
-                    mResult.success("success");
                     Bundle bundle = (Bundle) msg.obj;
                     String userId = bundle.getString("result");
                     String name = bundle.getString("name");
@@ -101,6 +100,9 @@ public class UserIdentityService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        Message message = mServiceHandler.obtainMessage(MSG_SERVICE_START);
+        message.obj = intent;
+        mServiceHandler.sendMessage(message);
         return mResultBinder;
     }
 
@@ -119,10 +121,10 @@ public class UserIdentityService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand: "+intent.getStringExtra("operation"));
-        Message message = mServiceHandler.obtainMessage(MSG_SERVICE_START);
+        /*Message message = mServiceHandler.obtainMessage(MSG_SERVICE_START);
         message.obj = intent;
         message.arg1 = startId;
-        mServiceHandler.sendMessage(message);
+        mServiceHandler.sendMessage(message);*/
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -153,6 +155,7 @@ public class UserIdentityService extends Service {
             return;
         }
         User user = new User(userId, name);
+        mResult.success("success");
     }
 
 

@@ -33,9 +33,10 @@ public class TasksPresenter implements TasksContract.TasksPresenter{
     private Context mContext;
 
 
-    public TasksPresenter(Context context) {
+    public TasksPresenter(Context context, TasksContract.TasksView tasksView) {
         mTasksRepository = TasksRepository.getInstance(new TasksLocalDataSource(context), new TasksRemoteDataSource(context));
         mContext = context;
+        mTasksView = tasksView;
     }
 
     public void loadTasks(boolean forceUpdate) {

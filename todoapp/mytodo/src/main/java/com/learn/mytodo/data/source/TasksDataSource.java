@@ -12,14 +12,27 @@ import java.util.List;
 public interface TasksDataSource {
 
     interface LoadTasksCallback {
+
         void onTasksLoaded(List<Task> task);
+
         void onDataNotAvailabel();
     }
 
+    interface GetTaskCallback {
+
+        void onTaskLoaded(Task task);
+
+        void onDataNotAvailable();
+    }
+
     interface SyncCallback {
+
         void loadTime(String s);
+
         void getDataAddedSync(List<Task> taskList);
+
         void getDataDeletedSync(List<Task> taskList);
+
         void getDataModifiedSync(List<Task> taskList);
     }
 

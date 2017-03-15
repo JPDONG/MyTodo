@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,9 +9,10 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:background="@mipmap/green"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:srcCompat="@android:drawable/sym_def_app_icon"
+        android:layout_gravity="center"
         />
 
     <LinearLayout
@@ -29,8 +31,10 @@
         <EditText
             android:id="@+id/user_name"
             android:layout_width="160dp"
-            android:layout_height="35dp"
+            android:layout_height="50dp"
             android:inputType="textPersonName"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
             />
     </LinearLayout>
 
@@ -44,12 +48,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_password"
+            android:layout_gravity="center"
             />
         <EditText
             android:id="@+id/user_password"
             android:layout_width="160dp"
-            android:layout_height="35dp"
+            android:layout_height="50dp"
             android:inputType="textPassword"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+
             />
     </LinearLayout>
     <LinearLayout
@@ -64,6 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="login"
+
             />
 
         <Button

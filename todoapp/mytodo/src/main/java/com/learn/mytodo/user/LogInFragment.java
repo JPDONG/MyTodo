@@ -70,8 +70,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onPause() {
         super.onPause();
-        getActivity().unbindService(mServiceConnection);
-        getActivity().stopService(loginIntent);
+
     }
 
     @Override
@@ -82,7 +81,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
     }
 
     @Override
@@ -113,6 +111,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             public void success(String s) {
                 Log.d(TAG, "success: ");
                 showSnackerMessage(s);
+                getActivity().unbindService(mServiceConnection);
             }
 
             @Override
@@ -120,13 +119,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 showSnackerMessage(s);
             }
         };
-        Intent loginIntent = new Intent(getContext(), UserIdentityService.class);
+        loginIntent = new Intent(getContext(), UserIdentityService.class);
         loginIntent.putExtra("operation", "login");
         loginIntent.putExtra("name", name);
         loginIntent.putExtra("password", password);
         getActivity().startService(loginIntent);
         getActivity().bindService(loginIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
-
         Log.d(TAG, "login: bindservice");
     }
 
