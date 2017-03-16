@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.INotificationSideChannel;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +25,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.learn.mytodo.R;
+import com.learn.mytodo.addedittask.AddEditTaskActivity;
 import com.learn.mytodo.data.Task;
 import com.learn.mytodo.data.source.TasksDataSource;
 import com.learn.mytodo.data.source.TasksRepository;
@@ -75,7 +77,7 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
             mTestRemoteData = false;
         }
         //loadTask();
-        //mTasksPresenter.start();
+        mTasksPresenter.start();
     }
 
     @Nullable
@@ -89,6 +91,7 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //mTasksPresenter.addNewTask();
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 mDialogView = inflater.inflate(R.layout.addtask_dialog, container, false);
                 builder.setView(mDialogView);
@@ -97,8 +100,8 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
                     public void onClick(DialogInterface dialogInterface, int i) {
                         EditText editTitle = (EditText) mDialogView.findViewById(R.id.edit_title);
                         EditText editDescription = (EditText) mDialogView.findViewById(R.id.edit_description);
-                        String title = editTitle.getText().toString();
-                        String description = editDescription.getText().toString();
+                        String title = editTitle.getText().toString().trim();
+                        String description = editDescription.getText().toString().trim();
                         Log.d(TAG, "onClick: title = " + title + ", description = " + description);
                         if ("".equals(title.trim())) {
                             showSnackerMessage("nothing to add");
@@ -144,6 +147,12 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
         Intent intent = new Intent(getContext(), TaskDetailActivity.class);
         intent.putExtra(TaskDetailActivity.TASK_ID, task.getmId());
         startActivity(intent);
+    }
+
+    @Override
+    public void showAddTask() {
+        Intent intent = new Intent(getContext(), AddEditTaskActivity.class);
+        startActivityForResult(intent, AddEditTaskActivity.REQUEST_ADD_TASK);
     }
 
     private void loadTask() {
@@ -236,7 +245,7 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
             if (task.ismCompleted()) {
                 holder.mTitle.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             }
-            holder.mDescription.setText(task.getmDescription());
+            //holder.mDescription.setText(task.getmDescription());
            /* if ("".equals(task.getmDescription())) {
                 holder.mDescription.setVisibility(View.GONE);
             } else {
@@ -296,7 +305,7 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
             super(itemView);
             mItemView = itemView;
             mTitle = (TextView) itemView.findViewById(R.id.task_title);
-            mDescription = (TextView) itemView.findViewById(R.id.task_description);
+            //mDescription = (TextView) itemView.findViewById(R.id.task_description);
             mCheckBox = (CheckBox) itemView.findViewById(R.id.task_checkbox);
         }
     }

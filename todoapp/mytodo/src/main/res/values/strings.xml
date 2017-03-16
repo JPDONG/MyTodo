@@ -30,4 +30,5 @@
     <string name="user_password_login">password:</string>
     <string name="title_login">log in</string>
     <string name="main_title">收集箱</string>
+    <string name="description_hint">add note here</string>
 </resources>

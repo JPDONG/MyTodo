@@ -97,6 +97,11 @@ public class TasksPresenter implements TasksContract.TasksPresenter{
         mTasksView.showSnackerMessage("complete task");
     }
 
+    @Override
+    public void addNewTask() {
+        mTasksView.showAddTask();
+    }
+
     public void syncData() {
         Log.d(TAG, "syncData: ");
         Intent intent = new Intent(mContext,TasksSyncService.class);

@@ -13,10 +13,14 @@ import com.learn.mytodo.R;
 
 public class AddEditTaskActivity extends AppCompatActivity {
 
+    public static final int REQUEST_ADD_TASK = 1;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_addedit);
+        AddEditTaskFragment addEditTaskFragment = new AddEditTaskFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, addEditTaskFragment).commit();
     }
 }

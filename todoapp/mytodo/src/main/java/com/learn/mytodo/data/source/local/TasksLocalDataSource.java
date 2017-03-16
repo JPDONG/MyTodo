@@ -206,4 +206,16 @@ public class TasksLocalDataSource implements TasksDataSource {
     }
 
 
+    public void updateTask(Task task) {
+        checkNotNull(task);
+        SQLiteDatabase sqLiteDatabase = mDBHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBHelper.COMPLETED, 0);
+        contentValues.put(DBHelper.TITLE, task.getmTitle());
+        contentValues.put(DBHelper.DESCRIPTION, task.getmDescription());
+        contentValues.put(DBHelper.STATUS, Task.Status.STATUS_MODIFIED);
+        contentValues.put(DBHelper.MODIFIED_TIME, mTime);
+        sqLiteDatabase.update(DBHelper.TASKS_TABLE_NAME, contentValues, "id=?", new String[]{task.getmId()});
+        sqLiteDatabase.close();
+    }
 }

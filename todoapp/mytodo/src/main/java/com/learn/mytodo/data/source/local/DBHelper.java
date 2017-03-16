@@ -41,7 +41,7 @@ public class DBHelper extends SQLiteOpenHelper {
             ID + TEXT_TYPE + " PRIMARY KEY" +COMMA_SEP +
             TITLE + TEXT_TYPE +COMMA_SEP +
             DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-            COMPLETED + BOOLEAN_TYPE + ",status text,time text)";
+            COMPLETED + BOOLEAN_TYPE + ",status text,time text,userid text)";
 
     public static final String SQL_CREATE_USERS = "CREATE TABLE " + USERS_TABLE_NAME +
             "(userid text primary key,name text,password text,token text,phone text,email text,current integer)";

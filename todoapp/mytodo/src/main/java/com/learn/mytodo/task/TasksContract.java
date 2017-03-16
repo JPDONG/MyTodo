@@ -19,6 +19,8 @@ public interface TasksContract {
         void activateTask(Task task);
 
         void completeTask(Task task);
+
+        void addNewTask();
     }
 
     interface TasksView {
@@ -27,5 +29,7 @@ public interface TasksContract {
         void showSnackerMessage(String message);
 
         void showTaskDetail(Task task);
+
+        void showAddTask();
     }
 }

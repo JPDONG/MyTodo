@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.learn.mytodo.R;
 import com.learn.mytodo.data.source.TasksRepository;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     private TasksLocalDataSource tasksLocalDataSource;
     private TasksRemoteDataSource tasksRemoteDataSource;
     private ImageView mUserIcon;
+    private TextView mUserName;
     private TasksPresenter mTasksPresenter;
 
     @Override
@@ -61,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = mNavigationView.getHeaderView(0);
         mUserIcon = (ImageView) headerView.findViewById(R.id.user_icon);
+        mUserName = (TextView) headerView.findViewById(R.id.user_name);
+        mUserName.setOnClickListener(this);
         mUserIcon.setOnClickListener(this);
         if (mNavigationView != null) {
             setupDrawerContent(mNavigationView);
@@ -148,6 +152,13 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 mDrawerLayout.closeDrawers();
+                break;
+            case R.id.user_name:
+                Intent intent1 = new Intent(this, LoginActivity.class);
+                startActivity(intent1);
+                mDrawerLayout.closeDrawers();
+                break;
+            default:
                 break;
         }
     }

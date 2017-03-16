@@ -113,7 +113,12 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
 
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()) {
+            case R.id.fab_edit_task:
+                TaskEditFragment taskEditFragment = new TaskEditFragment(mTaskId, getContext());
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.taskdetail_content, taskEditFragment).addToBackStack(null).commit();
+                break;
+        }
     }
 
 }

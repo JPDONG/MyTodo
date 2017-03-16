@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/add_task_dialog"/>
+        android:layout_height="50dp"
+        android:text="@string/add_task_dialog"
+        android:gravity="center"
+        android:background="@color/color_green"/>
 
     <EditText
         android:id="@+id/edit_title"
-        android:hint="@string/add_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:hint="@string/add_title"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
 
     <EditText
         android:id="@+id/edit_description"
-        android:hint="@string/add_description"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="160dp"
+        android:hint="@string/add_description"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="30dp"/>
 
 </LinearLayout>
