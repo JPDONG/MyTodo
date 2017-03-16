@@ -32,6 +32,7 @@ import com.learn.mytodo.data.source.remote.TasksRemoteDataSource;
 import com.learn.mytodo.user.LoginActivity;
 import com.learn.mytodo.user.UserInformationFragment;
 import com.learn.mytodo.util.Utils;
+import com.zhy.changeskin.SkinManager;
 
 public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener, View.OnClickListener {
     private Toolbar mToolbar;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SkinManager.getInstance().register(this);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         tasksLocalDataSource = new TasksLocalDataSource(getApplicationContext());
@@ -161,5 +163,11 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SkinManager.getInstance().unregister(this);
     }
 }

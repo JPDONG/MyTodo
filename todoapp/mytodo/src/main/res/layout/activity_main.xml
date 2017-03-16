@@ -24,6 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/color_green"
+                android:tag="skin:toolbar:background"
                 android:layout_alignParentStart="true"
                 toolbar:navigationIcon="@drawable/ic_menu"
                 toolbar:title="@string/main_title"
