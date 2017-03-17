@@ -286,6 +286,7 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
         }
 
         public void remove(int position) {
+            mTasksLocalDataSource.deleteTask(mList.get(position));
             mList.remove(position);
             notifyItemRemoved(position);
         }

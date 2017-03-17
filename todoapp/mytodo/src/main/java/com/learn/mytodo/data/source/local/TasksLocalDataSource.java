@@ -41,7 +41,7 @@ public class TasksLocalDataSource implements TasksDataSource {
         Log.d(TAG, "getTask: ");
         List<Task> taskList = new ArrayList<Task>();
         SQLiteDatabase database = mDBHelper.getReadableDatabase();
-        Cursor cursor = database.query(DBHelper.TASKS_TABLE_NAME, projection, null, null, null, null, null);
+        Cursor cursor = database.query(DBHelper.TASKS_TABLE_NAME, projection, "status not like '" + Task.Status.STATUS_DELETE + "'", null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 String taskId = cursor.getString(cursor.getColumnIndexOrThrow(projection[0]));
@@ -214,6 +214,16 @@ public class TasksLocalDataSource implements TasksDataSource {
         contentValues.put(DBHelper.TITLE, task.getmTitle());
         contentValues.put(DBHelper.DESCRIPTION, task.getmDescription());
         contentValues.put(DBHelper.STATUS, Task.Status.STATUS_MODIFIED);
+        contentValues.put(DBHelper.MODIFIED_TIME, mTime);
+        sqLiteDatabase.update(DBHelper.TASKS_TABLE_NAME, contentValues, "id=?", new String[]{task.getmId()});
+        sqLiteDatabase.close();
+    }
+
+    public void deleteTask(Task task) {
+        checkNotNull(task);
+        SQLiteDatabase sqLiteDatabase = mDBHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBHelper.STATUS, Task.Status.STATUS_DELETE);
         contentValues.put(DBHelper.MODIFIED_TIME, mTime);
         sqLiteDatabase.update(DBHelper.TASKS_TABLE_NAME, contentValues, "id=?", new String[]{task.getmId()});
         sqLiteDatabase.close();

@@ -48,13 +48,13 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SkinManager.getInstance().register(this);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         tasksLocalDataSource = new TasksLocalDataSource(getApplicationContext());
         tasksRemoteDataSource = new TasksRemoteDataSource(getApplicationContext());
         mTasksRepository = TasksRepository.getInstance(tasksLocalDataSource, tasksRemoteDataSource);
         initViews();
+        //SkinManager.getInstance().register(this);
     }
 
     private void initViews() {

@@ -31,4 +31,7 @@
     <string name="title_login">log in</string>
     <string name="main_title">收集箱</string>
     <string name="description_hint">add note here</string>
+    <string name="theme_green">green</string>
+    <string name="theme_blue">blue</string>
+    <string name="title_theme">主题</string>
 </resources>

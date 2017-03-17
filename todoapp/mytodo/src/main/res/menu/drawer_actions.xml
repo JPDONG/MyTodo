@@ -13,16 +13,17 @@
             android:title="@string/title_item2" />
     </group>
 
-    <item android:title="comunicate">
+    <item android:title="@string/title_theme">
         <menu>
             <item
                 android:id="@+id/item10"
-                android:icon="@color/colorAccent"
-                android:title="@string/drawer_title1"></item>
+                android:title="@string/theme_green"
+                android:background="@color/color_green"></item>
             <item
                 android:id="@+id/item11"
-                android:icon="@color/colorPrimaryDark"
-                android:title="@string/drawer_title2"></item>
+                android:title="@string/theme_blue"
+                android:background="@color/color_zhihu_blue"
+                ></item>
         </menu>
     </item>
 
