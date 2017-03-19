@@ -13,7 +13,9 @@ import android.widget.EditText;
 import com.learn.mytodo.R;
 import com.learn.mytodo.data.Task;
 import com.learn.mytodo.data.source.TasksDataSource;
+import com.learn.mytodo.data.source.TasksRepository;
 import com.learn.mytodo.data.source.local.TasksLocalDataSource;
+import com.learn.mytodo.data.source.remote.TasksRemoteDataSource;
 
 /**
  * Created by dongjiangpeng on 2017/3/16 0016.
@@ -27,11 +29,13 @@ public class TaskEditFragment extends Fragment implements View.OnClickListener {
     private String mTaskId;
     private TasksLocalDataSource mTasksLocalDataSource;
     private Context mContext;
+    private TasksRepository mTasksRepository;
 
     public TaskEditFragment(String taskId, Context context) {
         mTaskId = taskId;
         mContext = context;
         mTasksLocalDataSource = new TasksLocalDataSource(mContext);
+        mTasksRepository = TasksRepository.getInstance(mTasksLocalDataSource, new TasksRemoteDataSource(context));
     }
 
     @Nullable
@@ -72,6 +76,7 @@ public class TaskEditFragment extends Fragment implements View.OnClickListener {
                     return;
                 }
                 mTasksLocalDataSource.updateTask(new Task(mTaskId, title, description, false));
+                mTasksRepository.refreshDB();
                 break;
         }
     }

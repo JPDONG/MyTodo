@@ -107,6 +107,10 @@ public class TasksRepository {
         mCacheIsDirty = true;
     }
 
+    public void refreshDB() {
+        mCacheTasks = null;
+    }
+
     private void refreshLocalDataSource(List<Task> task) {
 
     }

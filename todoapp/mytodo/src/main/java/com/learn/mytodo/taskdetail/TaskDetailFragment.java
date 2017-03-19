@@ -1,5 +1,6 @@
 package com.learn.mytodo.taskdetail;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -41,7 +42,7 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
         mFloatingActionButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task);
         mCheckBox.setOnClickListener(this);
         mFloatingActionButton.setOnClickListener(this);
-        mTasksDetailPresenter.start(mTaskId);
+
         return view;
     }
 
@@ -112,13 +113,40 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
     }
 
     @Override
+    public void showCompleteLine() {
+        mTitleText.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+    }
+
+    @Override
+    public void showActivateLine() {
+        mTitleText.setPaintFlags(mTitleText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab_edit_task:
                 TaskEditFragment taskEditFragment = new TaskEditFragment(mTaskId, getContext());
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.taskdetail_content, taskEditFragment).addToBackStack(null).commit();
                 break;
+            case R.id.task_detail_complete:
+                /*if (task.ismCompleted()) {
+                    //Log.d(TAG, "onClick: activateTask :" + task);
+                    mTasksPresenter.activateTask(task);
+                    holder.mTitle.setPaintFlags(holder.mTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                } else {
+                    //Log.d(TAG, "onClick: completeTask :" + task);
+                    mTasksPresenter.completeTask(task);
+                    holder.mTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                }*/
+                mTasksDetailPresenter.clickCheckBox();
+                break;
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mTasksDetailPresenter.start(mTaskId);
+    }
 }

@@ -2,6 +2,7 @@ package com.learn.mytodo.task;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +17,7 @@ import android.transition.Scene;
 import android.transition.Slide;
 import android.transition.TransitionInflater;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -35,6 +37,7 @@ import com.learn.mytodo.util.Utils;
 import com.zhy.changeskin.SkinManager;
 
 public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener, View.OnClickListener {
+    private String TAG = "MainActivity";
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         tasksRemoteDataSource = new TasksRemoteDataSource(getApplicationContext());
         mTasksRepository = TasksRepository.getInstance(tasksLocalDataSource, tasksRemoteDataSource);
         initViews();
+        Log.d(TAG, "onCreate: ");
         //SkinManager.getInstance().register(this);
     }
 
@@ -117,6 +121,9 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 return true;
             case R.id.item_sync:
                 //mTasksRepository.syncData();
+                if (!Utils.checkNetwork(this)) {
+                    break;
+                }
                 mTasksPresenter.syncData();
                 Utils.showToast(this,getResources().getString(R.string.item_sync));
                 return true;
@@ -168,6 +175,44 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "onDestroy: ");
         SkinManager.getInstance().unregister(this);
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: ");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: ");
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.d(TAG, "onBackPressed: ");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart: ");
     }
 }

@@ -18,6 +18,7 @@ import android.widget.EditText;
 
 import com.learn.mytodo.R;
 import com.learn.mytodo.data.source.UserIdentityService;
+import com.learn.mytodo.util.Utils;
 
 /**
  * Created by dong on 2017/3/7 0007.
@@ -87,6 +88,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_login:
+                if (!Utils.checkNetwork(getContext())) {
+                    break;
+                }
                 login();
                 break;
             case R.id.btn_register:
@@ -98,6 +102,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 break;
         }
     }
+
 
     private void login() {
         Log.d(TAG, "login: ");

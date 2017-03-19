@@ -17,6 +17,7 @@ import android.widget.EditText;
 
 import com.learn.mytodo.R;
 import com.learn.mytodo.data.source.UserIdentityService;
+import com.learn.mytodo.util.Utils;
 
 /**
  * Created by dong on 2017/3/7 0007.
@@ -57,6 +58,9 @@ public class RegisterFragment extends Fragment{
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!Utils.checkNetwork(getContext())) {
+                    return;
+                }
                 String name = mUserName.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
                 if ("".equals(name) || "".equals(password)) {

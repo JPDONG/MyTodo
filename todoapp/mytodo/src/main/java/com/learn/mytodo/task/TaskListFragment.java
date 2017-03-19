@@ -51,7 +51,7 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
     private TasksRemoteDataSource mTasksRemoteDataSource;
     private TasksRepository mTasksRepository;
     private View mDialogView;
-    private String TAG = "TaskListFragment";
+    private String TAG = "MainActivity:TaskListFragment";
     private boolean mTestRemoteData = false;
     private TasksContract.TasksPresenter mTasksPresenter;
 
@@ -67,6 +67,7 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: ");
         mTaskList = new ArrayList(0);
         mTaskListAdapter = new TaskListAdapter(mTaskList);
         mTasksLocalDataSource = new TasksLocalDataSource(getContext());
@@ -77,7 +78,6 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
             mTestRemoteData = false;
         }
         //loadTask();
-        mTasksPresenter.start();
     }
 
     @Nullable
@@ -289,6 +289,8 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
             mTasksLocalDataSource.deleteTask(mList.get(position));
             mList.remove(position);
             notifyItemRemoved(position);
+            mTasksRepository.refreshDB();
+            //loadTask();
         }
 
         public void setList(List<Task> list) {
@@ -316,7 +318,7 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
         private TaskListAdapter taskListAdapter;
 
         public TaskItemTouchHelperCallback(TaskListAdapter adapter) {
-            super(ItemTouchHelper.UP|ItemTouchHelper.DOWN, ItemTouchHelper.LEFT);
+            super(0, ItemTouchHelper.LEFT);
             this.taskListAdapter = adapter;
         }
 
@@ -360,30 +362,38 @@ public class TaskListFragment extends Fragment implements TasksContract.TasksVie
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume: ");
+        mTasksPresenter.start();
+        mTaskListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        Log.d(TAG, "onStart: ");
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause: ");
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        Log.d(TAG, "onStop: ");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        Log.d(TAG, "onDestroyView: ");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "onDestroy: ");
     }
 }

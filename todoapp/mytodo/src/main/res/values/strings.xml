@@ -34,4 +34,8 @@
     <string name="theme_green">green</string>
     <string name="theme_blue">blue</string>
     <string name="title_theme">主题</string>
+    <string name="deleted">垃圾箱</string>
+    <string name="title_update">检查更新</string>
+    <string name="not_login">未登陆</string>
+    <string name="title_main">收集箱</string>
 </resources>

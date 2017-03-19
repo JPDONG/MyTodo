@@ -19,6 +19,7 @@ class TaskDetailPresenter implements TaskDetailContract.Presenter{
     private TasksLocalDataSource mTasksLocalDataSource;
     private Context mContext;
     private TaskDetailContract.View mTaskDetailView;
+    private Task mTask = null;
 
     public TaskDetailPresenter(String taskId, Context applicationContext, TaskDetailFragment taskDetailFragment) {
         mTasksRepository = TasksRepository.getInstance(new TasksLocalDataSource(applicationContext), new TasksRemoteDataSource(applicationContext));
@@ -28,13 +29,16 @@ class TaskDetailPresenter implements TaskDetailContract.Presenter{
     }
 
     public void start(final String taskId) {
-        Task task = null;
         mTasksLocalDataSource.getTask(taskId, new TasksDataSource.GetTaskCallback() {
             @Override
             public void onTaskLoaded(Task task) {
+                mTask = task;
                 mTaskDetailView.showTitle(task.getmTitle());
                 mTaskDetailView.showDescription(task.getmDescription());
                 mTaskDetailView.showCompletionStatus(task.ismCompleted());
+                if (task.ismCompleted()) {
+                    mTaskDetailView.showCompleteLine();
+                }
             }
 
             @Override
@@ -42,6 +46,21 @@ class TaskDetailPresenter implements TaskDetailContract.Presenter{
                 mTaskDetailView.showMissingTask();
             }
         });
+    }
+
+    @Override
+    public void clickCheckBox() {
+        if (mTask.ismCompleted()) {
+            //Log.d(TAG, "onClick: activateTask :" + task);
+            activateTask();
+            /*mTasksPresenter.activateTask(task);
+            holder.mTitle.setPaintFlags(holder.mTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));*/
+        } else {
+            //Log.d(TAG, "onClick: completeTask :" + task);
+            completeTask();
+            /*mTasksPresenter.completeTask(task);
+            holder.mTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);*/
+        }
     }
 
 
@@ -57,11 +76,13 @@ class TaskDetailPresenter implements TaskDetailContract.Presenter{
 
     @Override
     public void completeTask() {
-
+        mTasksRepository.completeTask(mTask);
+        mTaskDetailView.showCompleteLine();
     }
 
     @Override
     public void activateTask() {
-
+        mTasksRepository.activateTask(mTask);
+        mTaskDetailView.showActivateLine();
     }
 }

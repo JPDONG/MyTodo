@@ -33,6 +33,10 @@ public interface TaskDetailContract {
         boolean isActive();
 
         void setPresenter(Presenter presenter);
+
+        void showCompleteLine();
+
+        void showActivateLine();
     }
 
     interface Presenter {
@@ -46,5 +50,7 @@ public interface TaskDetailContract {
         void activateTask();
 
         void start(String mTaskId);
+
+        void clickCheckBox();
     }
 }
