@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     private ImageView mUserIcon;
     private TextView mUserName;
     private TasksPresenter mTasksPresenter;
+    private FragmentManager mFragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +81,8 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         TaskListFragment taskListFragment = new TaskListFragment();
         mTasksPresenter = new TasksPresenter(this, taskListFragment);
         taskListFragment.setPresenter(mTasksPresenter);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.content_frame,taskListFragment);
         fragmentTransaction.commit();
     }
@@ -110,6 +111,13 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         mToolbar.setSubtitle(R.string.subtitle_toolbar);*/
         mToolbar.inflateMenu(R.menu.menu_item);
         mToolbar.setOnMenuItemClickListener(this);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: Navigation");
+                mFragmentManager.popBackStack();
+            }
+        });
     }
 
 
