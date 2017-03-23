@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.support.v7.widget.Toolbar;
 
 import com.learn.mytodo.R;
 import com.learn.mytodo.data.source.UserIdentityService;
@@ -29,6 +30,7 @@ public class RegisterFragment extends Fragment{
     private EditText mPassword;
     private UserIdentityService.ResultBinder mResultBinder;
     private UserIdentityService.UserResult mUserResult;
+    //private Toolbar mToolbar;
 
 
     public RegisterFragment() {
@@ -55,6 +57,13 @@ public class RegisterFragment extends Fragment{
         mUserName = (EditText) view.findViewById(R.id.user_name);
         mPassword = (EditText) view.findViewById(R.id.user_password);
         mRegisterButton = (Button) view.findViewById(R.id.btn_register);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,4 +114,9 @@ public class RegisterFragment extends Fragment{
             showSnackerMessage(s);
         }
     };*/
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
 }

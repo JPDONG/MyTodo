@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.support.v7.widget.Toolbar;
 
 import com.learn.mytodo.R;
 import com.learn.mytodo.data.Task;
@@ -30,6 +31,7 @@ public class TaskEditFragment extends Fragment implements View.OnClickListener {
     private TasksLocalDataSource mTasksLocalDataSource;
     private Context mContext;
     private TasksRepository mTasksRepository;
+    private Toolbar mToolbar;
 
     public TaskEditFragment(String taskId, Context context) {
         mTaskId = taskId;
@@ -46,6 +48,20 @@ public class TaskEditFragment extends Fragment implements View.OnClickListener {
         mEditTitle = (EditText) view.findViewById(R.id.add_task_title);
         mSaveButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task);
         mSaveButton.setOnClickListener(this);
+        mToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().popBackStack();
+            }
+        });
+        /*FloatingActionButton floatingActionButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().popBackStack();
+            }
+        });*/
         showTask();
         return view;
     }
@@ -77,6 +93,7 @@ public class TaskEditFragment extends Fragment implements View.OnClickListener {
                 }
                 mTasksLocalDataSource.updateTask(new Task(mTaskId, title, description, false));
                 mTasksRepository.refreshDB();
+                getFragmentManager().popBackStack();
                 break;
         }
     }

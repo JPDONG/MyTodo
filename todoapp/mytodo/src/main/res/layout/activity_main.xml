@@ -58,7 +58,7 @@
                     android:layout_margin="@dimen/fab_margin"
                     app:fabSize="normal"
                     android:src="@drawable/ic_add"
-                    android:background="@color/color_green"
+                    app:backgroundTint="@color/color_green"
                     app:layout_anchor="@id/content_frame"
                     app:layout_anchorGravity="bottom|right|end">
 

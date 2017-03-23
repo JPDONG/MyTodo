@@ -4,7 +4,8 @@
     xmlns:toolbar="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -40,9 +41,9 @@
             android:id="@+id/fab_edit_task"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="20dp"
             android:src="@drawable/ic_edit"
-            android:theme="@style/FloatingActionButton"
+            app:backgroundTint="@color/color_green"
             app:fabSize="normal"
             app:layout_anchor="@+id/taskdetail_content"
             app:layout_anchorGravity="bottom|right" />

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
 import com.learn.mytodo.R;
 import com.learn.mytodo.data.Task;
@@ -27,6 +28,7 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
 
     private FloatingActionButton mFloatingActionButton;
     private TaskDetailContract.Presenter mTasksDetailPresenter;
+    private Toolbar mToolbar;
 
     public TaskDetailFragment(String task) {
         mTaskId = task;
@@ -40,6 +42,14 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
         mDescription = (TextView) view.findViewById(R.id.task_detail_description);
         mCheckBox = (CheckBox) view.findViewById(R.id.task_detail_complete);
         mFloatingActionButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task);
+        mFloatingActionButton.setImageResource(R.drawable.ic_edit);
+        mToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
         mCheckBox.setOnClickListener(this);
         mFloatingActionButton.setOnClickListener(this);
 
@@ -128,6 +138,7 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
             case R.id.fab_edit_task:
                 TaskEditFragment taskEditFragment = new TaskEditFragment(mTaskId, getContext());
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.taskdetail_content, taskEditFragment).addToBackStack(null).commit();
+                mFloatingActionButton.setImageResource(R.drawable.ic_done);
                 break;
             case R.id.task_detail_complete:
                 /*if (task.ismCompleted()) {
@@ -140,6 +151,8 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
                     holder.mTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
                 }*/
                 mTasksDetailPresenter.clickCheckBox();
+                break;
+            default:
                 break;
         }
     }

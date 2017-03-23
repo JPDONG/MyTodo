@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.support.v7.widget.Toolbar;
 
 import com.learn.mytodo.R;
 import com.learn.mytodo.data.source.UserIdentityService;
@@ -33,6 +34,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private UserIdentityService.ResultBinder mResultBinder;
     private UserIdentityService.UserResult mUserResult;
     private Intent loginIntent;
+    private Toolbar mToolbar;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
@@ -58,6 +60,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         mPasswordText = (EditText) view.findViewById(R.id.user_password);
         mLoginButton = (Button) view.findViewById(R.id.btn_login);
         mRegisterButton = (Button) view.findViewById(R.id.btn_register);
+        mToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
         mLoginButton.setOnClickListener(this);
         mRegisterButton.setOnClickListener(this);
         return view;
