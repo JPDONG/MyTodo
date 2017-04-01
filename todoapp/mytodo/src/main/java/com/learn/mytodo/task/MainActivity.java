@@ -1,6 +1,8 @@
 package com.learn.mytodo.task;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -32,6 +34,7 @@ import com.learn.mytodo.data.source.TasksRepository;
 import com.learn.mytodo.data.source.local.TasksLocalDataSource;
 import com.learn.mytodo.data.source.remote.TasksRemoteDataSource;
 import com.learn.mytodo.user.LoginActivity;
+import com.learn.mytodo.user.UserInformationActivity;
 import com.learn.mytodo.user.UserInformationFragment;
 import com.learn.mytodo.util.Utils;
 import com.zhy.changeskin.SkinManager;
@@ -67,17 +70,11 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         //setSupportActionBar(mToolbar);
         setToolbar();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        View headerView = mNavigationView.getHeaderView(0);
-        mUserIcon = (ImageView) headerView.findViewById(R.id.user_icon);
-        mUserName = (TextView) headerView.findViewById(R.id.user_name);
-        mUserName.setOnClickListener(this);
-        mUserIcon.setOnClickListener(this);
-        if (mNavigationView != null) {
-            setupDrawerContent(mNavigationView);
-        }
+
         ActionBarDrawerToggle actionBarDrawerToggle=new ActionBarDrawerToggle(this, mDrawerLayout,mToolbar,R.string.open_string,R.string.close_string);
         actionBarDrawerToggle.syncState();
+
+
         TaskListFragment taskListFragment = new TaskListFragment();
         mTasksPresenter = new TasksPresenter(this, taskListFragment);
         taskListFragment.setPresenter(mTasksPresenter);
@@ -85,6 +82,16 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.content_frame,taskListFragment);
         fragmentTransaction.commit();
+
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = mNavigationView.getHeaderView(0);
+        if (mNavigationView != null) {
+            setupDrawerContent(mNavigationView);
+        }
+        mUserIcon = (ImageView) headerView.findViewById(R.id.user_icon);
+        mUserName = (TextView) headerView.findViewById(R.id.user_name);
+        mUserName.setOnClickListener(this);
+        mUserIcon.setOnClickListener(this);
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -166,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                         .commit();
                 */
                 //
-                Intent intent = new Intent(this, LoginActivity.class);
+                Intent intent = new Intent(this, UserInformationActivity.class);
                 startActivity(intent);
                 mDrawerLayout.closeDrawers();
                 break;
@@ -215,6 +222,12 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     @Override
     protected void onResume() {
         super.onResume();
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        mUserName.setText(sharedPreferences.getString("user_name","user name"));
+        String imagePath = sharedPreferences.getString("user_icon","");
+        if (!"".equals(imagePath)) {
+            mUserIcon.setImageBitmap(BitmapFactory.decodeFile(imagePath));
+        }
         Log.d(TAG, "onResume: ");
     }
 

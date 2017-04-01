@@ -3,6 +3,7 @@ package com.learn.mytodo.data.source;
 import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -155,6 +156,11 @@ public class UserIdentityService extends Service {
             return;
         }
         User user = new User(userId, name);
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("user_name", name);
+        editor.putString("user_id", userId);
+        editor.apply();
         mResult.success("success");
     }
 
@@ -174,7 +180,7 @@ public class UserIdentityService extends Service {
                 Bundle bundle = new Bundle();
                 bundle.putString("result", result);
                 bundle.putString("name", name);
-                Message message = mServiceHandler.obtainMessage(MSG_LOGIN_RESULT,bundle);
+                Message message = mServiceHandler.obtainMessage(MSG_LOGIN_SUCCESS,bundle);
                 mServiceHandler.sendMessage(message);
             }
         }, new Response.ErrorListener() {

@@ -9,9 +9,10 @@
 
     <ImageView
         android:id="@+id/user_icon"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         app:srcCompat="@android:drawable/sym_def_app_icon"
+        android:layout_gravity="center"
         android:transitionName="transition"
         />
 

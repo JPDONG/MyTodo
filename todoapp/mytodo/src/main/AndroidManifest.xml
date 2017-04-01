@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -23,6 +25,7 @@
         <activity android:name=".addedittask.AddEditTaskActivity"/>
         <activity android:name=".user.LoginActivity"/>
         <activity android:name=".taskdetail.TaskDetailActivity"/>
+        <activity android:name=".user.UserInformationActivity"/>
 
         <service android:name=".data.source.TasksSyncService"/>
         <service android:name=".data.source.UserIdentityService"/>
