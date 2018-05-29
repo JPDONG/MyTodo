@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.learn.mytoolbar"
@@ -23,20 +23,20 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-    compile "com.android.support:design:$rootProject.supportLibraryVersion"
-    compile "com.android.support.constraint:constraint-layout:1.0.1"
-    compile 'com.android.volley:volley:1.0.0'
-    compile 'com.google.guava:guava:18.0'
-    compile 'com.alibaba:fastjson:1.1.56.android'
-    compile 'com.squareup.okhttp3:okhttp:3.6.0'
-    compile 'com.squareup.retrofit2:retrofit:2.2.0'
-    compile 'com.zhy:changeskin:4.0.2'
-    testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
+    implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:design:$rootProject.supportLibraryVersion"
+    implementation "com.android.support.constraint:constraint-layout:1.0.1"
+    implementation 'com.android.volley:volley:1.0.0'
+    implementation 'com.google.guava:guava:18.0'
+    implementation 'com.alibaba:fastjson:1.1.56.android'
+    implementation 'com.squareup.okhttp3:okhttp:3.6.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.2.0'
+    implementation 'com.zhy:changeskin:4.0.2'
+    testImplementation 'junit:junit:4.12'
+    testImplementation "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
 
 }

@@ -37,7 +37,6 @@ import com.learn.mytodo.user.LoginActivity;
 import com.learn.mytodo.user.UserInformationActivity;
 import com.learn.mytodo.user.UserInformationFragment;
 import com.learn.mytodo.util.Utils;
-import com.zhy.changeskin.SkinManager;
 
 public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener, View.OnClickListener {
     private String TAG = "MainActivity";
@@ -191,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy: ");
-        SkinManager.getInstance().unregister(this);
     }
 
 
