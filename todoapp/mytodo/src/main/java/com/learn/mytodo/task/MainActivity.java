@@ -75,11 +75,13 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
 
 
         TaskListFragment taskListFragment = new TaskListFragment();
+        CollectionFragment collectionFragment = new CollectionFragment();
         mTasksPresenter = new TasksPresenter(this, taskListFragment);
         taskListFragment.setPresenter(mTasksPresenter);
         mFragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_frame,taskListFragment);
+        //fragmentTransaction.replace(R.id.content_frame,taskListFragment);
+        fragmentTransaction.replace(R.id.content_frame,collectionFragment);
         fragmentTransaction.commit();
 
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);

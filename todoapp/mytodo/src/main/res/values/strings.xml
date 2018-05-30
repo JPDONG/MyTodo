@@ -38,4 +38,5 @@
     <string name="title_update">检查更新</string>
     <string name="not_login">未登陆</string>
     <string name="title_main">收集箱</string>
+    <string name="title_detail">详情</string>
 </resources>

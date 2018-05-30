@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="120dp">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview_item"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        >
+
+        <TextView
+            android:id="@+id/tv_collection_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="待办"/>
+
+        <TextView
+            android:id="@+id/tv_collection_nums"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="9"/>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
