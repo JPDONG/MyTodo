@@ -11,6 +11,8 @@ import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
 
+    private static final String TAG = "DBHelper";
+
     public static final int DB_VERSION = 1;
 
     public static final String DB_NAME = "Tasks.db";
@@ -24,6 +26,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TASKS_TABLE_NAME = "tasks";
 
     public static final String USERS_TABLE_NAME = "users";
+
+    public static final String COLLECTIONS_TABLE_NAME = "collections";
 
     public static final String ID = "id";
 
@@ -45,7 +49,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String SQL_CREATE_USERS = "CREATE TABLE " + USERS_TABLE_NAME +
             "(userid text primary key,name text,password text,token text,phone text,email text,current integer)";
-    private String TAG = "DBHelper";
+
+    public static final String SQL_CREATE_COLLECTIONS = "CREATE TABLE " + COLLECTIONS_TABLE_NAME +
+            "(id text primary key,title text,createAt text,userid text)";
 
     public DBHelper(Context context){
         super(context, DB_NAME, null, DB_VERSION);
@@ -56,6 +62,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Log.d(TAG, "onCreate: SQL_CREATE_ENTRIES = " + SQL_CREATE_TASKS);
         sqLiteDatabase.execSQL(SQL_CREATE_TASKS);
         sqLiteDatabase.execSQL(SQL_CREATE_USERS);
+        sqLiteDatabase.execSQL(SQL_CREATE_COLLECTIONS);
     }
 
     @Override
