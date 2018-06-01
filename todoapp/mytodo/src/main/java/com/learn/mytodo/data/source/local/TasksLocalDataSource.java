@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.learn.mytodo.data.Task;
+import com.learn.mytodo.data.source.Status;
 import com.learn.mytodo.data.source.TasksDataSource;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class TasksLocalDataSource implements TasksDataSource {
         Log.d(TAG, "getTask: ");
         List<Task> taskList = new ArrayList<Task>();
         SQLiteDatabase database = mDBHelper.getReadableDatabase();
-        Cursor cursor = database.query(DBHelper.TASKS_TABLE_NAME, projection, "status not like '" + Task.Status.STATUS_DELETE + "'", null, null, null, null);
+        Cursor cursor = database.query(DBHelper.TASKS_TABLE_NAME, projection, "status not like '" + Status.STATUS_DELETE + "'", null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 String taskId = cursor.getString(cursor.getColumnIndexOrThrow(projection[0]));
@@ -87,7 +88,7 @@ public class TasksLocalDataSource implements TasksDataSource {
         contentValues.put(DBHelper.TITLE, task.getmTitle());
         contentValues.put(DBHelper.DESCRIPTION, task.getmDescription());
         contentValues.put(DBHelper.COMPLETED, task.ismCompleted());
-        contentValues.put(DBHelper.STATUS, Task.Status.STATUS_ADD);
+        contentValues.put(DBHelper.STATUS, Status.STATUS_ADD);
         contentValues.put(DBHelper.MODIFIED_TIME, mTime);
         sqLiteDatabase.insert(DBHelper.TASKS_TABLE_NAME, null, contentValues);
         sqLiteDatabase.close();
@@ -100,7 +101,7 @@ public class TasksLocalDataSource implements TasksDataSource {
         SQLiteDatabase sqLiteDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(DBHelper.COMPLETED, 1);
-        contentValues.put(DBHelper.STATUS, Task.Status.STATUS_MODIFIED);
+        contentValues.put(DBHelper.STATUS, Status.STATUS_MODIFIED);
         contentValues.put(DBHelper.MODIFIED_TIME, mTime);
         sqLiteDatabase.update(DBHelper.TASKS_TABLE_NAME, contentValues, "id=?", new String[]{task.getmId()});
         sqLiteDatabase.close();
@@ -113,7 +114,7 @@ public class TasksLocalDataSource implements TasksDataSource {
         SQLiteDatabase sqLiteDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(DBHelper.COMPLETED, 0);
-        contentValues.put(DBHelper.STATUS, Task.Status.STATUS_MODIFIED);
+        contentValues.put(DBHelper.STATUS, Status.STATUS_MODIFIED);
         contentValues.put(DBHelper.MODIFIED_TIME, mTime);
         sqLiteDatabase.update(DBHelper.TASKS_TABLE_NAME, contentValues, "id=?", new String[]{task.getmId()});
         sqLiteDatabase.close();
@@ -199,7 +200,7 @@ public class TasksLocalDataSource implements TasksDataSource {
         checkNotNull(t);
         SQLiteDatabase sqLiteDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DBHelper.STATUS, Task.Status.STATUS_SYNC);
+        contentValues.put(DBHelper.STATUS, Status.STATUS_SYNC);
         //contentValues.put(DBHelper.MODIFIED_TIME, mTime);
         sqLiteDatabase.update(DBHelper.TASKS_TABLE_NAME, contentValues, "id=?", new String[]{t.getmId()});
         sqLiteDatabase.close();
@@ -213,7 +214,7 @@ public class TasksLocalDataSource implements TasksDataSource {
         contentValues.put(DBHelper.COMPLETED, 0);
         contentValues.put(DBHelper.TITLE, task.getmTitle());
         contentValues.put(DBHelper.DESCRIPTION, task.getmDescription());
-        contentValues.put(DBHelper.STATUS, Task.Status.STATUS_MODIFIED);
+        contentValues.put(DBHelper.STATUS, Status.STATUS_MODIFIED);
         contentValues.put(DBHelper.MODIFIED_TIME, mTime);
         sqLiteDatabase.update(DBHelper.TASKS_TABLE_NAME, contentValues, "id=?", new String[]{task.getmId()});
         sqLiteDatabase.close();
@@ -223,7 +224,7 @@ public class TasksLocalDataSource implements TasksDataSource {
         checkNotNull(task);
         SQLiteDatabase sqLiteDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DBHelper.STATUS, Task.Status.STATUS_DELETE);
+        contentValues.put(DBHelper.STATUS, Status.STATUS_DELETE);
         contentValues.put(DBHelper.MODIFIED_TIME, mTime);
         sqLiteDatabase.update(DBHelper.TASKS_TABLE_NAME, contentValues, "id=?", new String[]{task.getmId()});
         sqLiteDatabase.close();

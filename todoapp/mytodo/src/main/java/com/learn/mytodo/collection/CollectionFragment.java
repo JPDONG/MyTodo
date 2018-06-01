@@ -1,10 +1,9 @@
-package com.learn.mytodo.task;
+package com.learn.mytodo.collection;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,14 +15,16 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.learn.mytodo.R;
-import com.learn.mytodo.data.Task;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 public class CollectionFragment extends Fragment {
 
@@ -31,6 +32,14 @@ public class CollectionFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private CollectionAdapter mAdapter;
+    private List<CollectionItem> mItemList;
+    private CollectionPresenter mPresenter;
+    private CompositeDisposable mCompositeDisposable;
+
+    public CollectionFragment() {
+        mPresenter = new CollectionPresenter(getContext());
+        mCompositeDisposable = new CompositeDisposable();
+    }
 
     @Nullable
     @Override
@@ -39,11 +48,11 @@ public class CollectionFragment extends Fragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_collection);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
         mAdapter = new CollectionAdapter();
-        List<CollectionItem> list = new ArrayList<>();
-        for (int i = 0; i < 9; i++) {
+        mItemList = new ArrayList<>();
+        /*for (int i = 0; i < 9; i++) {
             list.add(new CollectionItem("todo" + i,12 + i));
-        }
-        mAdapter.setCollectionItemList(list);
+        }*/
+        mAdapter.setCollectionItemList(mItemList);
         mAdapter.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -52,7 +61,29 @@ public class CollectionFragment extends Fragment {
             }
         });
         mRecyclerView.setAdapter(mAdapter);
+        loadData();
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCompositeDisposable.clear();
+    }
+
+    private void loadData() {
+        mCompositeDisposable.add(mPresenter.getCollections()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<CollectionItem>>() {
+                    @Override
+                    public void accept(List<CollectionItem> collectionItems) throws Exception {
+                        if (collectionItems == null) {
+                            Toast.makeText(getContext(),"加载失败",Toast.LENGTH_SHORT).show();
+                        } else {
+                            mAdapter.setCollectionItemList(collectionItems);
+                        }
+                    }
+                }));
     }
 
     private void showColletcionDialog(LayoutInflater inflater, @Nullable ViewGroup container) {
@@ -88,7 +119,19 @@ public class CollectionFragment extends Fragment {
     }
 
     private void saveCollection(CollectionItem item) {
-
+        mCompositeDisposable.add(mPresenter.save(item)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean result) throws Exception {
+                        if (result) {
+                            mItemList.add(item);
+                            mAdapter.setCollectionItemList(mItemList);
+                        } else {
+                            Toast.makeText(getContext(),"保存失败",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }));
     }
 
     static class CollectionAdapter extends RecyclerView.Adapter<CollectionViewHolder>{
@@ -120,6 +163,11 @@ public class CollectionFragment extends Fragment {
                     return false;
                 }
             });
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return super.getItemViewType(position);
         }
 
         @Override

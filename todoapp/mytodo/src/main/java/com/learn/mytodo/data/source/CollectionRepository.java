@@ -3,11 +3,9 @@ package com.learn.mytodo.data.source;
 import android.content.Context;
 
 import com.learn.mytodo.data.source.local.CollectionsLocalDataSource;
-import com.learn.mytodo.task.CollectionItem;
+import com.learn.mytodo.collection.CollectionItem;
 
 import java.util.List;
-
-import io.reactivex.Observable;
 
 public class CollectionRepository {
 

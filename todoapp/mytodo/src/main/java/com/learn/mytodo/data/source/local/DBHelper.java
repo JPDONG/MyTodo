@@ -51,7 +51,7 @@ public class DBHelper extends SQLiteOpenHelper {
             "(userid text primary key,name text,password text,token text,phone text,email text,current integer)";
 
     public static final String SQL_CREATE_COLLECTIONS = "CREATE TABLE " + COLLECTIONS_TABLE_NAME +
-            "(id text primary key,title text,createAt text,userid text)";
+            "(id text primary key,title text,createAt text,userid text,status integer)";
 
     public DBHelper(Context context){
         super(context, DB_NAME, null, DB_VERSION);

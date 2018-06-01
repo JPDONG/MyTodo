@@ -1,4 +1,4 @@
-package com.learn.mytodo.task;
+package com.learn.mytodo.collection;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

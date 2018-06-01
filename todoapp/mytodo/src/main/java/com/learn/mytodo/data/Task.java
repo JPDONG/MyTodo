@@ -96,12 +96,4 @@ public final class Task {
     public String toString() {
         return "" + this.mId + this.getmTitle() + this.getmDescription() + this.ismCompleted();
     }
-
-    public static class Status implements BaseColumns {
-        public static final int STATUS_ADD = 1;
-        public static final int STATUS_DELETE = -1;
-        public static final int STATUS_MODIFIED = 2;
-        public static final int STATUS_SYNC = 9;
-
-    }
 }
