@@ -81,7 +81,6 @@ public class CollectionFragment extends Fragment {
         mAdapter.setCollectionItemList(mItemList);
         mAdapter.setOnClickListener(mItemClickListener);
         mRecyclerView.setAdapter(mAdapter);
-        loadData();
         mFloatingActionButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_task);
         mAddListener = new View.OnClickListener() {
             @Override
@@ -97,6 +96,7 @@ public class CollectionFragment extends Fragment {
         super.onResume();
         Log.d(TAG, "onResume: ");
         mFloatingActionButton.setOnClickListener(mAddListener);
+        loadData();
     }
 
     @Override

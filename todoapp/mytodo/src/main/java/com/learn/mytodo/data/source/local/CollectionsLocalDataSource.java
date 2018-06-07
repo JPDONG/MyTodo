@@ -3,6 +3,7 @@ package com.learn.mytodo.data.source.local;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -34,14 +35,18 @@ public class CollectionsLocalDataSource {
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 String id = cursor.getString(cursor.getColumnIndexOrThrow(projection[0]));
+                int nums = (int) DatabaseUtils.queryNumEntries(database,DBHelper.TASKS_TABLE_NAME,"collection_id like '" + id +"'",null);
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(projection[1]));
                 String createAt = cursor.getString(cursor.getColumnIndexOrThrow(projection[2]));
-                list.add(new CollectionItem(id,title,createAt));
+                list.add(new CollectionItem(id,title,createAt,nums));
             }
         }
         if (cursor != null) {
             cursor.close();
         }
+        /*for (CollectionItem item : list) {
+            item.nums =  (int) DatabaseUtils.queryNumEntries(database,DBHelper.TASKS_TABLE_NAME,"id like '" + item.id +"'",null);
+        }*/
         database.close();
         Log.d(TAG, "getCollections: " + list.size());
         return list;

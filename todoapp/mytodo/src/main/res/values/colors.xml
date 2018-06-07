@@ -7,4 +7,5 @@
     <color name="color_background">#FFFAF0</color>
     <color name="color_balck">#080808</color>
     <color name="color_green">#85b84f</color>
+    <color name="white">#ffffff</color>
 </resources>

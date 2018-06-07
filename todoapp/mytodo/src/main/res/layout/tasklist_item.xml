@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:textColor="@color/color_balck"
+        android:textColor="@color/white"
         android:text="hello"
         android:layout_marginLeft="20dp"
         android:layout_gravity="center"
