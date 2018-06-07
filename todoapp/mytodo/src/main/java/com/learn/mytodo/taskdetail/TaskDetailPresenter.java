@@ -33,10 +33,10 @@ class TaskDetailPresenter implements TaskDetailContract.Presenter{
             @Override
             public void onTaskLoaded(Task task) {
                 mTask = task;
-                mTaskDetailView.showTitle(task.getmTitle());
-                mTaskDetailView.showDescription(task.getmDescription());
-                mTaskDetailView.showCompletionStatus(task.ismCompleted());
-                if (task.ismCompleted()) {
+                mTaskDetailView.showTitle(task.getTitle());
+                mTaskDetailView.showDescription(task.getDescription());
+                mTaskDetailView.showCompletionStatus(task.isCompleted());
+                if (task.isCompleted()) {
                     mTaskDetailView.showCompleteLine();
                 }
             }
@@ -50,7 +50,7 @@ class TaskDetailPresenter implements TaskDetailContract.Presenter{
 
     @Override
     public void clickCheckBox() {
-        if (mTask.ismCompleted()) {
+        if (mTask.isCompleted()) {
             //Log.d(TAG, "onClick: activateTask :" + task);
             activateTask();
             /*mTasksPresenter.activateTask(task);

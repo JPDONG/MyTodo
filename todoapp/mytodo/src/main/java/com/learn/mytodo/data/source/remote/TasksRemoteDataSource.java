@@ -103,10 +103,10 @@ public class TasksRemoteDataSource {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> taskMap = new HashMap<>();
-                taskMap.put("id", task.getmId());
-                taskMap.put("title", task.getmTitle());
-                taskMap.put("description", task.getmDescription());
-                taskMap.put("completed", task.ismCompleted()?"1":"0");
+                taskMap.put("id", task.getId());
+                taskMap.put("title", task.getTitle());
+                taskMap.put("description", task.getDescription());
+                taskMap.put("completed", task.isCompleted()?"1":"0");
                 taskMap.put("operation", "save");
                 return taskMap;
             }
@@ -133,7 +133,7 @@ public class TasksRemoteDataSource {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> taskMap = new HashMap<>();
-                taskMap.put("id", task.getmId());
+                taskMap.put("id", task.getId());
                 /*taskMap.put("title", task.getmTitle());
                 taskMap.put("description", task.getmDescription());
                 taskMap.put("completed", task.ismCompleted()?"1":"0");*/
@@ -163,7 +163,7 @@ public class TasksRemoteDataSource {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> taskMap = new HashMap<>();
-                taskMap.put("id", task.getmId());
+                taskMap.put("id", task.getId());
                 /*taskMap.put("title", task.getmTitle());
                 taskMap.put("description", task.getmDescription());
                 taskMap.put("completed", task.ismCompleted()?"1":"0");*/
@@ -218,10 +218,10 @@ public class TasksRemoteDataSource {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> taskMap = new HashMap<>();
-                taskMap.put("id", t.getmId());
-                taskMap.put("title", t.getmTitle());
-                taskMap.put("description", t.getmDescription());
-                taskMap.put("completed", t.ismCompleted()?"1":"0");
+                taskMap.put("id", t.getId());
+                taskMap.put("title", t.getTitle());
+                taskMap.put("description", t.getDescription());
+                taskMap.put("completed", t.isCompleted()?"1":"0");
                 taskMap.put("operation", "update");
                 return taskMap;
             }

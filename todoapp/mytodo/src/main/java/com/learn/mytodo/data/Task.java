@@ -14,86 +14,75 @@ import java.util.UUID;
 public final class Task {
 
     @NonNull
-    private final String mId;
-
-    @Nullable
-    private final String mTitle;
-
-    @Nullable
-    private final String mDescription;
-
-    private final boolean mCompleted;
-
+    private final String id;
+    private String collectionId;
+    private final String title;
+    private final String description;
+    private boolean completed;
     private String status;
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getModifiedTime() {
-        return modifiedTime;
-    }
-
-    public void setModifiedTime(String modifiedTime) {
-        this.modifiedTime = modifiedTime;
-    }
-
     private String modifiedTime;
 
-    public Task(String mId, String mTitle, String mDescription, boolean mCompleted) {
-        this.mId = mId;
-        this.mTitle = mTitle;
-        this.mDescription = mDescription;
-        this.mCompleted = mCompleted;
+    public Task(String id, String title, String description, boolean completed,String collectionId) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.completed = completed;
+        this.collectionId = collectionId;
     }
 
-    public Task(String mTitle, String mDescription){
-        this(UUID.randomUUID().toString(),mTitle,mDescription,false);
+    public Task(String title, String description, String collectionId){
+        this(UUID.randomUUID().toString(),title,description,false, collectionId);
     }
 
-    public String getmId() {
-        return mId;
+    public Task(String id, String title, String description, boolean completed) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.completed = completed;
     }
 
-    public String getmTitle() {
-        return mTitle;
+    @NonNull
+    public String getId() {
+        return id;
     }
 
-    public String getmDescription() {
-        return mDescription;
+    public String getTitle() {
+        return title;
     }
 
-    public boolean ismCompleted() {
-        return mCompleted;
+    public String getDescription() {
+        return description;
     }
 
-    /*@Override
-    public boolean equals(Object obj) {
-        Task o = (Task) obj;
-        return mId == o.mId && mTitle == o.mTitle && mDescription == o.mDescription && mCompleted == o.mCompleted;
-    }*/
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    public String getCollectionId() {
+        return collectionId;
+    }
 
     @Override
     public boolean equals(Object obj) {
         boolean result = false;
         if (obj instanceof Task) {
             Task o = (Task)obj;
-            result = this.getmId().equals(o.getmId());
+            result = this.getId().equals(o.getId());
         }
         return result;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(mId);
+        return Objects.hashCode(id);
     }
 
     @Override
     public String toString() {
-        return "" + this.mId + this.getmTitle() + this.getmDescription() + this.ismCompleted();
+        return "" + this.id + this.getTitle() + this.getDescription() + this.isCompleted();
     }
 }

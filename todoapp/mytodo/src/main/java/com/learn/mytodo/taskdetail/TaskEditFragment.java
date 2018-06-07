@@ -70,8 +70,8 @@ public class TaskEditFragment extends Fragment implements View.OnClickListener {
         mTasksLocalDataSource.getTask(mTaskId, new TasksDataSource.GetTaskCallback() {
             @Override
             public void onTaskLoaded(Task task) {
-                mEditTitle.setText(task.getmTitle());
-                mEditDescription.setText(task.getmDescription());
+                mEditTitle.setText(task.getTitle());
+                mEditDescription.setText(task.getDescription());
             }
 
             @Override

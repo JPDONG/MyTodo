@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.learn.mytodo.collection.CollectionItem;
 import com.learn.mytodo.data.Task;
@@ -16,9 +17,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CollectionsLocalDataSource {
 
+    private static final String TAG = "CollectionsLocalDataSource";
+
     private DBHelper mDBHelper;
-    private static final String[] projection = {"id","title","createAt"
-    };
+    private static final String[] projection = {"id","title","create_at"};
 
     public CollectionsLocalDataSource(Context context) {
         checkNotNull(context);
@@ -28,7 +30,7 @@ public class CollectionsLocalDataSource {
     public List<CollectionItem> getCollections() {
         List<CollectionItem> list = new ArrayList<CollectionItem>();
         SQLiteDatabase database = mDBHelper.getReadableDatabase();
-        Cursor cursor = database.query(DBHelper.TASKS_TABLE_NAME, projection, "status != '" + Status.STATUS_DELETE + "'", null, null, null, null);
+        Cursor cursor = database.query(DBHelper.COLLECTIONS_TABLE_NAME, projection, "status != " + Status.STATUS_DELETE, null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 String id = cursor.getString(cursor.getColumnIndexOrThrow(projection[0]));
@@ -41,17 +43,19 @@ public class CollectionsLocalDataSource {
             cursor.close();
         }
         database.close();
+        Log.d(TAG, "getCollections: " + list.size());
         return list;
     }
 
     public boolean save(CollectionItem item) {
         checkNotNull(item);
+        Log.d(TAG, String.format("save: id %s, title %s",item.id,item.title));
         SQLiteDatabase sqLiteDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("id",item.id);
         contentValues.put("title", item.title);
-        contentValues.put("createAt", String.valueOf(System.currentTimeMillis()));
-        sqLiteDatabase.insert(DBHelper.COLLECTIONS_TABLE_NAME, null, contentValues);
-        return false;
+        contentValues.put("create_at", String.valueOf(System.currentTimeMillis()));
+        contentValues.put("status",Status.STATUS_ADD);
+        return sqLiteDatabase.insert(DBHelper.COLLECTIONS_TABLE_NAME, null, contentValues) == -1?false:true;
     }
 }

@@ -5,8 +5,8 @@ android {
     buildToolsVersion '27.0.3'
 
     defaultConfig {
-        applicationId "com.learn.mytoolbar"
-        minSdkVersion 21
+        applicationId "com.learn.mytodo"
+        minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"

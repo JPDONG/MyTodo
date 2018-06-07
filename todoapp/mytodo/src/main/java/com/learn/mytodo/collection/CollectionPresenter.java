@@ -1,6 +1,7 @@
 package com.learn.mytodo.collection;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.learn.mytodo.data.source.CollectionRepository;
 
@@ -12,6 +13,8 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.schedulers.Schedulers;
 
 public class CollectionPresenter {
+
+    public static final String TAG = "CollectionPresenter";
 
     CollectionRepository mCollectionRepository;
 
@@ -39,5 +42,10 @@ public class CollectionPresenter {
             }
         })
                 .subscribeOn(Schedulers.io());
+    }
+
+    public String test() {
+        Log.d(TAG, "test: ");
+        return mCollectionRepository.test();
     }
 }

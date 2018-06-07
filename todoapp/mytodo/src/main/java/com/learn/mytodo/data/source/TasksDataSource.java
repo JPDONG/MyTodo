@@ -1,7 +1,6 @@
 package com.learn.mytodo.data.source;
 
 import com.learn.mytodo.data.Task;
-import com.learn.mytodo.data.source.local.TasksLocalDataSource;
 
 import java.util.List;
 
@@ -38,9 +37,9 @@ public interface TasksDataSource {
 
     void getTask(LoadTasksCallback loadTasksCallback);
 
-    void saveTask(Task task);
+    boolean saveTask(Task task);
 
-    void activateTask(Task task);
+    boolean activateTask(Task task);
 
-    void completeTask(Task task);
+    boolean completeTask(Task task);
 }

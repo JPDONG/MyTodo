@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.learn.mytodo.view.SlideListLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_slide_top"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="#330000ff"
+            android:gravity="center"
+            android:text="@string/list_slide_top"/>
+
+        <TextView
+            android:id="@+id/tv_slide_delete"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="#66ff0000"
+            android:gravity="center"
+            android:text="@string/list_slide_delete"/>
+
+    </LinearLayout>
+
+    <include layout="@layout/tasklist_item"/>
+
+</com.learn.mytodo.view.SlideListLayout>

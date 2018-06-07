@@ -36,7 +36,7 @@ public class TasksRepository {
         mTasksRemoteDataSource = checkNotNull(tasksRemoteDataSource);
     }
 
-    public static TasksRepository getInstance(TasksLocalDataSource tasksLocalDataSource, TasksRemoteDataSource tasksRemoteDataSource) {
+    public static synchronized TasksRepository getInstance(TasksLocalDataSource tasksLocalDataSource, TasksRemoteDataSource tasksRemoteDataSource) {
         if (INSTANCE == null) {
             INSTANCE = new TasksRepository(tasksLocalDataSource, tasksRemoteDataSource);
         }
@@ -45,6 +45,18 @@ public class TasksRepository {
 
     public void destoryInstance() {
         INSTANCE = null;
+    }
+
+    public List<Task> getTaskList(String collectionId) {
+        return mTasksLocalDataSource.getTaskList(collectionId);
+    }
+
+    public boolean save(Task task) {
+        return mTasksLocalDataSource.saveTask(task);
+    }
+
+    public boolean delete(Task task) {
+        return mTasksLocalDataSource.deleteTask(task);
     }
 
     public interface LoadTasksCallback {
@@ -82,7 +94,7 @@ public class TasksRepository {
         }
         mCacheTasks.clear();
         for (Task t : task) {
-            mCacheTasks.put(t.getmId(), t);
+            mCacheTasks.put(t.getId(), t);
         }
         mCacheIsDirty = false;
     }
@@ -122,31 +134,42 @@ public class TasksRepository {
         if (mCacheTasks == null) {
             mCacheTasks = new LinkedHashMap<>();
         }
-        mCacheTasks.put(task.getmId(), task);
+        mCacheTasks.put(task.getId(), task);
 
     }
 
-    public void activateTask(Task task) {
+    public boolean activateTask(Task task) {
         checkNotNull(task);
-        mTasksLocalDataSource.activateTask(task);
+        if (mTasksLocalDataSource.activateTask(task)) {
+            Task activateTask = new Task(task.getId(), task.getTitle(), task.getDescription(), false,task.getCollectionId());
+            if (mCacheTasks == null) {
+                mCacheTasks = new LinkedHashMap<>();
+            }
+            mCacheTasks.put(task.getId(), activateTask);
+            return true;
+        } else {
+            return false;
+        }
         //mTasksRemoteDataSource.activateTask(task);
-        Task activateTask = new Task(task.getmId(), task.getmTitle(), task.getmDescription(), false);
-        if (mCacheTasks == null) {
-            mCacheTasks = new LinkedHashMap<>();
-        }
-        mCacheTasks.put(task.getmId(), activateTask);
+
 
     }
 
-    public void completeTask(Task task) {
+
+    public boolean completeTask(Task task) {
         checkNotNull(task);
-        mTasksLocalDataSource.completeTask(task);
-        //mTasksRemoteDataSource.completeTask(task);
-        Task completeTask = new Task(task.getmId(), task.getmTitle(), task.getmDescription(), true);
-        if (mCacheTasks == null) {
-            mCacheTasks = new LinkedHashMap<>();
+        if (mTasksLocalDataSource.completeTask(task)) {
+            Task completeTask = new Task(task.getId(), task.getTitle(), task.getDescription(), true,task.getCollectionId());
+            if (mCacheTasks == null) {
+                mCacheTasks = new LinkedHashMap<>();
+            }
+            mCacheTasks.put(task.getId(),completeTask);
+            return true;
+        } else {
+            return false;
         }
-        mCacheTasks.put(task.getmId(),completeTask);
+        //mTasksRemoteDataSource.completeTask(task);
+
     }
 
     public void syncData() {

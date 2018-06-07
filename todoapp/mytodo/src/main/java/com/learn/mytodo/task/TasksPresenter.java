@@ -16,6 +16,12 @@ import com.learn.mytodo.data.source.remote.TasksRemoteDataSource;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 import static android.R.attr.name;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -23,31 +29,38 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by dongjiangpeng on 2017/2/28 0028.
  */
 
-public class TasksPresenter implements TasksContract.TasksPresenter{
+public class TasksPresenter {
 
     private static final String TAG = "TasksPresenter";
 
     private TasksRepository mTasksRepository;
     private boolean mFirstLoad;
-    private TasksContract.TasksView mTasksView;
     private Context mContext;
 
 
     public TasksPresenter(Context context, TasksContract.TasksView tasksView) {
         mTasksRepository = TasksRepository.getInstance(new TasksLocalDataSource(context), new TasksRemoteDataSource(context));
         mContext = context;
-        mTasksView = tasksView;
+    }
+
+    public TasksPresenter(Context context) {
+        this.mContext = context;
+        mTasksRepository = TasksRepository.getInstance(new TasksLocalDataSource(context), new TasksRemoteDataSource(context));
+    }
+
+    public Observable<List<Task>> getTaskList(String collectionId) {
+        return Observable.just(mTasksRepository.getTaskList(collectionId))
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Boolean> save(Task task) {
+        return Observable.just(mTasksRepository.save(task))
+                .subscribeOn(Schedulers.io());
     }
 
     public void loadTasks(boolean forceUpdate) {
         loadTasks(forceUpdate|mFirstLoad, true);
         mFirstLoad = false;
-    }
-
-    @Override
-    public void openTaskDetail(Task task) {
-        checkNotNull(task);
-        mTasksView.showTaskDetail(task);
     }
 
     private void loadTasks(boolean forceUpdate, boolean showLoadingUI) {
@@ -61,7 +74,6 @@ public class TasksPresenter implements TasksContract.TasksPresenter{
                 for (Task t : task) {
                     tasksShow.add(t);
                 }
-                processTasks(tasksShow);
             }
 
             @Override
@@ -71,35 +83,20 @@ public class TasksPresenter implements TasksContract.TasksPresenter{
         });
     }
 
-    @Override
-    public void processTasks(List<Task> tasksShow) {
-        if (tasksShow.isEmpty()) {
-
-        } else {
-            mTasksView.showTasks(tasksShow);
-        }
-    }
-
-    @Override
     public void start() {
         loadTasks(false);
     }
 
-    public void activateTask(Task task) {
+    public Observable<Boolean> activateTask(Task task) {
         checkNotNull(task);
-        mTasksRepository.activateTask(task);
-        mTasksView.showSnackerMessage("activate task");
+        return Observable.just(mTasksRepository.activateTask(task))
+                .subscribeOn(Schedulers.io());
     }
 
-    public void completeTask(Task task) {
+    public Observable<Boolean> completeTask(Task task) {
         checkNotNull(task);
-        mTasksRepository.completeTask(task);
-        mTasksView.showSnackerMessage("complete task");
-    }
-
-    @Override
-    public void addNewTask() {
-        mTasksView.showAddTask();
+        return Observable.just(mTasksRepository.completeTask(task))
+                .subscribeOn(Schedulers.io());
     }
 
     public void syncData() {
@@ -111,12 +108,17 @@ public class TasksPresenter implements TasksContract.TasksPresenter{
     TasksSyncService.SyncResult syncResult = new TasksSyncService.SyncResult() {
         @Override
         public void syncSuccess() {
-            mTasksView.showSnackerMessage("sync success");
+
         }
 
         @Override
         public void syncFailure() {
-            mTasksView.showSnackerMessage("sync fail");
+
         }
     };
+
+    public Observable<Boolean> delete(Task task) {
+        return Observable.just(mTasksRepository.delete(task))
+                .subscribeOn(Schedulers.io());
+    }
 }

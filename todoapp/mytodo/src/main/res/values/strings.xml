@@ -15,8 +15,8 @@
     <string name="all_task_title">All Tasks</string>
     <string name="taskdetail_title">task detail title</string>
     <string name="add_task_dialog">Add Task</string>
-    <string name="add_title">title</string>
-    <string name="add_description">description</string>
+    <string name="add_title">标题</string>
+    <string name="add_description">描述</string>
     <string name="ok">ok</string>
     <string name="cancel">cancel</string>
     <string name="addtask_title">Add Task</string>
@@ -39,4 +39,6 @@
     <string name="not_login">未登陆</string>
     <string name="title_main">收集箱</string>
     <string name="title_detail">详情</string>
+    <string name="list_slide_top">置顶</string>
+    <string name="list_slide_delete">删除</string>
 </resources>

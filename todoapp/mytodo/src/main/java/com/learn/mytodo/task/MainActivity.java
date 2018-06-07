@@ -54,26 +54,68 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         //SkinManager.getInstance().register(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: ");
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: ");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: ");
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.d(TAG, "onBackPressed: ");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        mUserName.setText(sharedPreferences.getString("user_name","user name"));
+        String imagePath = sharedPreferences.getString("user_icon","");
+        if (!"".equals(imagePath)) {
+            mUserIcon.setImageBitmap(BitmapFactory.decodeFile(imagePath));
+        }
+        Log.d(TAG, "onResume: ");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart: ");
+    }
+
     private void initViews() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(mToolbar);
         setToolbar();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         ActionBarDrawerToggle actionBarDrawerToggle=new ActionBarDrawerToggle(this, mDrawerLayout,mToolbar,R.string.open_string,R.string.close_string);
         actionBarDrawerToggle.syncState();
-
-
-        TaskListFragment taskListFragment = new TaskListFragment();
         CollectionFragment collectionFragment = new CollectionFragment();
-        mTasksPresenter = new TasksPresenter(this, taskListFragment);
-        taskListFragment.setPresenter(mTasksPresenter);
         mFragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         //fragmentTransaction.replace(R.id.content_frame,taskListFragment);
-        fragmentTransaction.replace(R.id.content_frame,collectionFragment);
+        fragmentTransaction.replace(R.id.content_frame,collectionFragment,"CollectionFragment");
         fragmentTransaction.commit();
-
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = mNavigationView.getHeaderView(0);
         if (mNavigationView != null) {
@@ -178,52 +220,5 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy: ");
-    }
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: ");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop: ");
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Log.d(TAG, "onBackPressed: ");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause: ");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
-        mUserName.setText(sharedPreferences.getString("user_name","user name"));
-        String imagePath = sharedPreferences.getString("user_icon","");
-        if (!"".equals(imagePath)) {
-            mUserIcon.setImageBitmap(BitmapFactory.decodeFile(imagePath));
-        }
-        Log.d(TAG, "onResume: ");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d(TAG, "onRestart: ");
-    }
 }
