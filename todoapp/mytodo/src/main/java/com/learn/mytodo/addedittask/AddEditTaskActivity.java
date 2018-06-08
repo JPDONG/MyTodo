@@ -19,7 +19,7 @@ public class AddEditTaskActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_addedit);
+        setContentView(R.layout.activity_task_edit);
         AddEditTaskFragment addEditTaskFragment = new AddEditTaskFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, addEditTaskFragment).commit();
     }

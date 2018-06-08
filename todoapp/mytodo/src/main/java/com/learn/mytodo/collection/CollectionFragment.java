@@ -130,7 +130,7 @@ public class CollectionFragment extends Fragment {
 
     private void showColletcionDialog(LayoutInflater inflater, @Nullable ViewGroup container) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        View dialogView = inflater.inflate(R.layout.addtask_dialog, container, false);
+        View dialogView = inflater.inflate(R.layout.dialog_task_add, container, false);
         builder.setView(dialogView);
         builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
@@ -183,7 +183,7 @@ public class CollectionFragment extends Fragment {
 
         @Override
         public CollectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new CollectionViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_collection_item, parent, false));
+            return new CollectionViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_collection_item, parent, false));
         }
 
         @Override
@@ -192,11 +192,10 @@ public class CollectionFragment extends Fragment {
             CollectionItem item = mCollectionItemList.get(position);
             holder.mCollectionTitleTextView.setText(item.title);
             holder.mCollectionNumsTextView.setText(String.valueOf(item.nums));
-
             holder.mCardView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    mClickListener.onLongClick(v);
+                    holder.deleteButton.setVisibility(View.VISIBLE);
                     return true;
                 }
             });
@@ -204,6 +203,12 @@ public class CollectionFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     mClickListener.onClick(v, item.id);
+                }
+            });
+            holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mClickListener.onDelete(holder,position);
                 }
             });
         }
@@ -233,20 +238,20 @@ public class CollectionFragment extends Fragment {
 
         public TextView mCollectionTitleTextView;
         public TextView mCollectionNumsTextView;
-        public ImageView mAddImageView;
+        public ImageView deleteButton;
         public CardView mCardView;
 
         public CollectionViewHolder(View itemView) {
             super(itemView);
             mCollectionNumsTextView = (TextView) itemView.findViewById(R.id.tv_collection_nums);
             mCollectionTitleTextView = (TextView) itemView.findViewById(R.id.tv_collection_title);
-            mAddImageView = (ImageView) itemView.findViewById(R.id.iv_collection_add);
+            deleteButton = (ImageView) itemView.findViewById(R.id.iv_collection_delete);
             mCardView = (CardView) itemView.findViewById(R.id.cv_collection);
         }
     }
 
     interface ItemClickListener {
-        void onLongClick(View v);
+        void onDelete(CollectionViewHolder viewHolder,int position);
 
         void onClick(View v,String collectionId);
     }

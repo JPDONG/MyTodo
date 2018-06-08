@@ -6,7 +6,6 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -24,7 +23,6 @@ import android.widget.TextView;
 import com.learn.mytodo.R;
 import com.learn.mytodo.addedittask.AddEditTaskActivity;
 import com.learn.mytodo.data.Task;
-import com.learn.mytodo.data.source.TasksRepository;
 import com.learn.mytodo.data.source.local.TasksLocalDataSource;
 import com.learn.mytodo.data.source.remote.TasksRemoteDataSource;
 import com.learn.mytodo.taskdetail.TaskDetailActivity;
@@ -50,7 +48,6 @@ public class TaskListFragment extends Fragment {
     private List<Task> mTaskList;
     private TasksLocalDataSource mTasksLocalDataSource;
     private TasksRemoteDataSource mTasksRemoteDataSource;
-    private TasksRepository mTasksRepository;
     private View mDialogView;
     private String TAG = "MainActivity:TaskListFragment";
     private boolean mTestRemoteData = false;
@@ -144,7 +141,7 @@ public class TaskListFragment extends Fragment {
         mTaskList = new ArrayList(0);
         mTaskListAdapter = new TaskListAdapter(mTaskList,mTaskItemClickListener);
         mCompositeDisposable = new CompositeDisposable();
-        View view = inflater.inflate(R.layout.tasklist_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_task_list, container, false);
         mRecyclerView = (SlideListView) view.findViewById(R.id.recycler_view);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         setupRecyclerView();
@@ -236,7 +233,7 @@ public class TaskListFragment extends Fragment {
 
     private void showAddTaskDialog(LayoutInflater inflater, ViewGroup container) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        mDialogView = inflater.inflate(R.layout.addtask_dialog, container, false);
+        mDialogView = inflater.inflate(R.layout.dialog_task_add, container, false);
         builder.setView(mDialogView);
         builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
@@ -367,7 +364,7 @@ public class TaskListFragment extends Fragment {
 
         @Override
         public ListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            ListItemViewHolder listItemViewHolder = new ListItemViewHolder(getActivity().getLayoutInflater().inflate(R.layout.list_slide_item, parent, false));
+            ListItemViewHolder listItemViewHolder = new ListItemViewHolder(getActivity().getLayoutInflater().inflate(R.layout.list_task_item, parent, false));
             return listItemViewHolder;
         }
 
@@ -441,8 +438,6 @@ public class TaskListFragment extends Fragment {
         public void remove(int position) {
             mList.remove(position);
             notifyItemRemoved(position);
-            mTasksRepository.refreshDB();
-            //loadTask();
         }
 
         public void setList(List<Task> list) {

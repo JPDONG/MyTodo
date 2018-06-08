@@ -31,7 +31,7 @@ public class CollectionsLocalDataSource {
     public List<CollectionItem> getCollections() {
         List<CollectionItem> list = new ArrayList<CollectionItem>();
         SQLiteDatabase database = mDBHelper.getReadableDatabase();
-        Cursor cursor = database.query(DBHelper.COLLECTIONS_TABLE_NAME, projection, "status != " + Status.STATUS_DELETE, null, null, null, null);
+        Cursor cursor = database.query(DBHelper.COLLECTIONS_TABLE_NAME, projection, "delete_flag == 0", null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 String id = cursor.getString(cursor.getColumnIndexOrThrow(projection[0]));
@@ -60,7 +60,8 @@ public class CollectionsLocalDataSource {
         contentValues.put("id",item.id);
         contentValues.put("title", item.title);
         contentValues.put("create_at", String.valueOf(System.currentTimeMillis()));
-        contentValues.put("status",Status.STATUS_ADD);
+        contentValues.put("status",Status.STATUS_NEW);
+        contentValues.put("delete_flag",0);
         return sqLiteDatabase.insert(DBHelper.COLLECTIONS_TABLE_NAME, null, contentValues) == -1?false:true;
     }
 }

@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 
 import com.learn.mytodo.R;
-import com.learn.mytodo.data.Task;
 
 /**
  * Created by dongjiangpeng on 2017/3/13 0013.
@@ -37,7 +36,7 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.task_detail_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_task_detail, container, false);
         mTitleText = (TextView) view.findViewById(R.id.task_detail_title);
         mDescription = (TextView) view.findViewById(R.id.task_detail_description);
         mCheckBox = (CheckBox) view.findViewById(R.id.task_detail_complete);

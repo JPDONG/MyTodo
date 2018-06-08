@@ -22,7 +22,6 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.*;
-import retrofit2.http.Multipart;
 
 import com.learn.mytodo.R;
 import com.learn.mytodo.data.source.remote.ServiceGenerator;
@@ -30,8 +29,6 @@ import com.learn.mytodo.data.source.remote.ServiceGenerator;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by dong on 2017/4/1 0001.
@@ -49,7 +46,7 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.user_infomation_frag);
+        setContentView(R.layout.fragment_user_information);
         mUserIcon = (ImageView) findViewById(R.id.user_icon);
         mUserName = (TextView) findViewById(R.id.user_name);
         mUserIcon.setOnClickListener(this);

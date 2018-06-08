@@ -26,6 +26,6 @@
 
     </LinearLayout>
 
-    <include layout="@layout/tasklist_item"/>
+    <include layout="@layout/list_task_item_content"/>
 
 </com.learn.mytodo.view.SlideListLayout>

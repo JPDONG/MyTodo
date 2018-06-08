@@ -45,13 +45,13 @@ public class DBHelper extends SQLiteOpenHelper {
             ID + TEXT_TYPE + " PRIMARY KEY" +COMMA_SEP +
             TITLE + TEXT_TYPE +COMMA_SEP +
             DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-            COMPLETED + BOOLEAN_TYPE + ",status integer,time text,user_id text,collection_id)";
+            COMPLETED + BOOLEAN_TYPE + ",status integer,time text,user_id text,collection_id,delete_flag integer)";
 
     public static final String SQL_CREATE_USERS = "CREATE TABLE " + USERS_TABLE_NAME +
             "(userid text primary key,name text,password text,token text,phone text,email text,current integer)";
 
     public static final String SQL_CREATE_COLLECTIONS = "CREATE TABLE " + COLLECTIONS_TABLE_NAME +
-            "(id text primary key,title text,create_at text,userid text,status integer)";
+            "(id text primary key,title text,create_at text,userid text,status integer,delete_flag integer)";
 
     public DBHelper(Context context){
         super(context, DB_NAME, null, DB_VERSION);

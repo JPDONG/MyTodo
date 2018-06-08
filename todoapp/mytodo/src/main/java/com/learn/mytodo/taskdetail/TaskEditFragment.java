@@ -43,7 +43,7 @@ public class TaskEditFragment extends Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.edittask_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_task_edit, container, false);
         mEditDescription = (EditText) view.findViewById(R.id.add_task_description);
         mEditTitle = (EditText) view.findViewById(R.id.add_task_title);
         mSaveButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task);
