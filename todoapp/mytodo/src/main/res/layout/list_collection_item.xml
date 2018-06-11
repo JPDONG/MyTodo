@@ -11,6 +11,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:background="@color/color_green"
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
         >
@@ -45,7 +46,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:src="@drawable/list_collection_item_delete"
-        android:visibility="gone"
+        android:visibility="invisible"
         />
 
 </RelativeLayout>

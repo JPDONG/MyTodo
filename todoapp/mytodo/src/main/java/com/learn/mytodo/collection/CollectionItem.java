@@ -32,4 +32,16 @@ public class CollectionItem {
         this.createAt = createAt;
         this.nums = nums;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getNums() {
+        return nums;
+    }
 }

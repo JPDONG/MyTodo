@@ -10,6 +10,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class CollectionPresenter {
@@ -47,5 +48,10 @@ public class CollectionPresenter {
     public String test() {
         Log.d(TAG, "test: ");
         return mCollectionRepository.test();
+    }
+
+    public Observable<Boolean> delete(CollectionItem item) {
+        return Observable.just(mCollectionRepository.delete(item))
+                .subscribeOn(Schedulers.io());
     }
 }

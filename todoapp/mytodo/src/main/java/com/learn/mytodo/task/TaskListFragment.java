@@ -31,6 +31,7 @@ import com.learn.mytodo.view.SlideListView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -138,7 +139,7 @@ public class TaskListFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: ");
         mTasksPresenter = new TasksPresenter(getContext());
-        mTaskList = new ArrayList(0);
+        mTaskList = new LinkedList<>();
         mTaskListAdapter = new TaskListAdapter(mTaskList,mTaskItemClickListener);
         mCompositeDisposable = new CompositeDisposable();
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
@@ -289,7 +290,7 @@ public class TaskListFragment extends Fragment {
                     @Override
                     public void accept(List<Task> tasks) throws Exception {
                         mTaskList = tasks;
-                        mTaskListAdapter.replaceData(tasks);
+                        mTaskListAdapter.replaceData(mTaskList);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -309,7 +310,7 @@ public class TaskListFragment extends Fragment {
                     @Override
                     public void accept(Boolean result) throws Exception {
                         if (result) {
-                            mTaskList.add(task);
+                            ((LinkedList<Task>)mTaskList).addFirst(task);
                             mTaskListAdapter.replaceData(mTaskList);
                         }
                     }

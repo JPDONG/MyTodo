@@ -64,4 +64,14 @@ public class CollectionsLocalDataSource {
         contentValues.put("delete_flag",0);
         return sqLiteDatabase.insert(DBHelper.COLLECTIONS_TABLE_NAME, null, contentValues) == -1?false:true;
     }
+
+    public boolean delete(CollectionItem item) {
+        checkNotNull(item);
+        SQLiteDatabase sqLiteDatabase = mDBHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBHelper.STATUS, Status.STATUS_MODIFIED);
+        contentValues.put(DBHelper.MODIFIED_TIME, String.valueOf(System.currentTimeMillis()));
+        contentValues.put("delete_flag", 1);
+        return sqLiteDatabase.update(DBHelper.COLLECTIONS_TABLE_NAME, contentValues, "id=?", new String[]{item.getId()}) > 0;
+    }
 }

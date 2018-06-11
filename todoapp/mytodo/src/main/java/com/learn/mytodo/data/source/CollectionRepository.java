@@ -55,4 +55,8 @@ public class CollectionRepository {
         }
         return null;
     }
+
+    public boolean delete(CollectionItem item) {
+        return mDataSource.delete(item);
+    }
 }

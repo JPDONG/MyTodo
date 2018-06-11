@@ -25,6 +25,7 @@ import com.learn.mytodo.task.TaskListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -47,9 +48,25 @@ public class CollectionFragment extends Fragment {
     }
 
     private ItemClickListener mItemClickListener = new ItemClickListener() {
-        @Override
-        public void onLongClick(View v) {
 
+        @Override
+        public void onDelete(CollectionViewHolder viewHolder, int position) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(String.format(Locale.CHINESE,"删除 %s（包含%d个条目）",mItemList.get(position).title,mItemList.get(position).nums));
+            builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    removeItem(position);
+                }
+            });
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    viewHolder.deleteButton.setVisibility(View.GONE);
+                    dialog.dismiss();
+                }
+            });
+            builder.create().show();
         }
 
         @Override
@@ -175,11 +192,28 @@ public class CollectionFragment extends Fragment {
                 }));
     }
 
+    private void removeItem(int position) {
+        mCompositeDisposable.add(mPresenter.delete(mItemList.get(position))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean result) throws Exception {
+                if (result) {
+                    mAdapter.remove(position);
+                }
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                Log.e(TAG, "on error:" + throwable.toString());
+            }
+        }));
+    }
+
     static class CollectionAdapter extends RecyclerView.Adapter<CollectionViewHolder> {
 
-        private List<CollectionItem> mCollectionItemList = new ArrayList<>();
-        private ItemClickListener mClickListener;
-        private View.OnLongClickListener mLongClickListener;
+        private List<CollectionItem> list = new ArrayList<>();
+        private ItemClickListener clickListener;
 
         @Override
         public CollectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -189,7 +223,7 @@ public class CollectionFragment extends Fragment {
         @Override
         public void onBindViewHolder(CollectionViewHolder holder, int position) {
 
-            CollectionItem item = mCollectionItemList.get(position);
+            CollectionItem item = list.get(position);
             holder.mCollectionTitleTextView.setText(item.title);
             holder.mCollectionNumsTextView.setText(String.valueOf(item.nums));
             holder.mCardView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -202,13 +236,13 @@ public class CollectionFragment extends Fragment {
             holder.mCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mClickListener.onClick(v, item.id);
+                    clickListener.onClick(v, item.id);
                 }
             });
             holder.deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mClickListener.onDelete(holder,position);
+                    clickListener.onDelete(holder,position);
                 }
             });
         }
@@ -220,17 +254,22 @@ public class CollectionFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            //return mCollectionItemList.size() + 1;
-            return mCollectionItemList.size();
+            //return list.size() + 1;
+            return list.size();
         }
 
         public void setCollectionItemList(List<CollectionItem> list) {
-            mCollectionItemList = list;
+            this.list = list;
             notifyDataSetChanged();
         }
 
         public void setOnClickListener(ItemClickListener listener) {
-            this.mClickListener = listener;
+            this.clickListener = listener;
+        }
+
+        public void remove(int position) {
+            list.remove(position);
+            notifyItemRemoved(position);
         }
     }
 
